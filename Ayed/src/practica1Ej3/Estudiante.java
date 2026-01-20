@@ -1,0 +1,32 @@
+package practica1Ej3;
+
+public class Estudiante extends Persona {
+	private int comision;
+	private String direccion;
+	
+
+	public int getComision() {
+		return comision;
+	}
+
+	public void setComision(int comision) {
+		this.comision = comision;
+	}
+
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public String tusDatos() {
+		String aux = super.tusDatos() + " Direccion: " + getDireccion() + " Comision: " + getComision();
+		return aux;
+	}
+	
+
+
+}
