@@ -1,5 +1,6 @@
 package aCola;
 import java.util.*;
+/* aux queue */
 public class cola<T> {
 	
 	    protected List<T> data;
