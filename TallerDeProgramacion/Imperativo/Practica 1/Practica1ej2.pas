@@ -75,6 +75,7 @@ begin
 		ImprimirVector (v,dimL);
 	end;
 end;
+// Programa principal
 var
 	v:VectorOficinas;
 	dimL:integer;
