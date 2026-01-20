@@ -20,6 +20,7 @@ begin
 	writeln ('Ingrese el numero al archivo');
 	readln (x);
 	Rewrite (archivo_logico);
+	// Si el numero es distinto de 30000
 	while x <> 30000 do begin
 		write (archivo_logico,x);
 		writeln ('Ingrese el numero al archivo');
