@@ -1,0 +1,142 @@
+programa ejemplo
+procesos
+  proceso juntarFlores (ES f:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso hacerEtapa1 (ES f:numero)
+  comenzar
+    repetir 2
+      repetir 10
+        juntarFlores (f)
+        mover
+      derecha
+    juntarFlores (f)
+  fin
+  proceso hacerEtapa2 (ES f:numero)
+  comenzar
+    repetir 2
+      repetir 9
+        juntarFlores (f)
+        mover
+      derecha
+    juntarFlores (f)
+  fin
+  proceso dejarFlores 
+  variables
+    Av:numero
+    Ca:numero
+  comenzar
+    Av:=PosAv
+    Ca:=PosCa
+    mientras (HayFlorEnLaBolsa)
+      BloquearEsquina (20,20)
+      Pos (20,20)
+      depositarFlor
+      Pos (Av,Ca)
+      LiberarEsquina (20,20)
+  fin
+  proceso CalcularMaximo (E fA:numero; E fB:numero; ES max:numero)
+  comenzar
+    si (fA>fB)
+      max:=1
+    sino
+      si (fB>fA)
+        max:=2
+      sino
+        max:=3
+  fin
+areas
+  EquipoA: AreaPC (1,1,11,11)
+  EquipoB: AreaPC (13,1,23,11)
+  ARF: AreaP (30,1,30,1)
+  Esquina: AreaPC (20,20,20,20)
+robots
+  robot robotRecorrido
+  variables
+    f:numero
+    soy:numero
+    voy:boolean
+  comenzar
+    f:=0
+    RecibirMensaje (soy,RF)
+    si (soy=2)
+      repetir 2
+        derecha
+      RecibirMensaje (voy,r1)
+      hacerEtapa2(f)
+    sino
+      si (soy=4)
+        repetir 2
+          derecha
+        RecibirMensaje (voy,r3)
+        hacerEtapa2(f)
+    si (soy=1)
+      hacerEtapa1(f)
+      EnviarMensaje (V,r2)
+    sino
+      si (soy=3)
+        hacerEtapa1(f)
+        EnviarMensaje (V,r4)
+    si (HayFlorEnLaBolsa)
+      dejarFlores
+    EnviarMensaje (soy,RF)
+    EnviarMensaje (f,RF)
+  fin
+  robot robotFis
+  variables
+    soy:numero
+    fA,fB,f:numero
+    max:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4,r4)
+    repetir 4
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (f,r1)
+        fA:=fA+f
+      sino
+        si (soy=2)
+          RecibirMensaje (f,r2)
+          fA:=fA+f
+        sino
+          si (soy=3)
+            RecibirMensaje (f,r3)
+            fB:=fB+f
+          sino
+            RecibirMensaje (f,r4)
+            fB:=fB+f
+    CalcularMaximo (fA,fB,max)
+    si (max=1)
+      Informar ('gano el equipo A con flores iguales a ', fA)
+    sino
+      si (max=2)
+        Informar ('gano el equipo B con flores iguales a ', fB)
+      sino
+        Informar ('empataron con flores iguales a ', fA)
+  fin
+        
+variables
+  r1,r2,r3,r4: robotRecorrido
+  RF: robotFis
+comenzar
+  AsignarArea(r1, EquipoA)
+  AsignarArea(r2, EquipoA)
+  AsignarArea(r3, EquipoB)
+  AsignarArea(r4, EquipoB)
+  AsignarArea(r1, Esquina)
+  AsignarArea(r2, Esquina)
+  AsignarArea(r3, Esquina)
+  AsignarArea(r4, Esquina)
+  AsignarArea(RF, ARF)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 11,10)
+  Iniciar(r3, 13,1)
+  Iniciar(r4, 23,10)
+  Iniciar (RF,30,1)
+fin

@@ -1,0 +1,55 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package practica3ej4dn;
+
+/**
+ *
+ * @author Nicolas
+ */
+public class Cliente {
+    private String nombre;
+    private int dni;
+    private int edad;
+
+
+    public Cliente (String unNombre, int unDni, int unEdad) {
+        setNombre (unNombre);
+        setDni (unDni);
+        setEdad (unEdad);
+    }
+    
+    public String toString() {
+        String aux;
+        aux = "Nombre: " + getNombre() + ", dni: " + getDni() + ". edad " + getEdad();
+        return aux;
+    }
+    
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getDni() {
+        return dni;
+    }
+
+    public void setDni(int dni) {
+        this.dni = dni;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+    
+    
+}

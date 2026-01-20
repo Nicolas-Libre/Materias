@@ -1,0 +1,86 @@
+programa ejemplo
+procesos
+  proceso juntarFlores (ES f:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso juntarPapeles (ES p:numero) 
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso hacerCalleFlor (ES f:numero)
+  comenzar
+    derecha
+    repetir 9
+      juntarFlores(f)
+      mover
+    juntarFlores(f)
+  fin
+  proceso hacerCallePapel (ES p:numero)
+  comenzar
+    derecha 
+    repetir 9
+      juntarPapeles (p)
+      mover
+    juntarPapeles (p)
+  fin
+areas
+  ARA1: AreaPC (1,1,10,1)
+  ARB1: AreaPC (1,5,10,5)
+  ARA2: AreaP (11,1,20,1)
+  ARB2: AreaP (11,5,20,5)
+robots
+  robot robotA1
+  variables
+    f:numero
+  comenzar
+    hacerCalleFlor (f)
+    EnviarMensaje (f,A2)
+    Pos (1,1)
+  fin
+  robot robotB1
+  variables
+    p:numero
+  comenzar
+    hacerCallePapel (p)
+    EnviarMensaje (p,B2)
+    Pos (1,5)
+  fin
+  robot robotA2
+  variables
+    f:numero
+    fsuma:numero
+  comenzar
+    RecibirMensaje (f,A1)
+    hacerCalleFlor (fsuma)
+    Informar (f+fsuma)
+  fin
+  robot robotB2
+  variables 
+    p:numero
+    psuma:numero
+    soy:numero
+  comenzar    
+    RecibirMensaje (p,B1)
+    hacerCallePapel (psuma)
+    Informar (p+psuma)
+  fin
+variables
+  A1: robotA1
+  A2: robotA2
+  B1: robotB1
+  B2: robotB2
+comenzar
+  AsignarArea(A1, ARA1)
+  AsignarArea(A2, ARA2)
+  AsignarArea(B1, ARB1)
+  AsignarArea(B2, ARB2)
+  Iniciar(A1, 1,1)
+  Iniciar (A2,11,1)
+  Iniciar (B1,1,5)
+  Iniciar (B2,11,5)
+fin

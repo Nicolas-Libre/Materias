@@ -1,0 +1,131 @@
+programa ejemplo
+procesos
+  proceso juntarFlores (ES f:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso hacerLado(ES f:numero)
+  comenzar
+    repetir 5
+      juntarFlores (f)
+      mover
+    derecha
+  fin
+  proceso Ganador_InformarG (E f1:numero; E f2:numero; E f3:numero)
+  variables
+    max:numero
+  comenzar
+    max:=0
+    si ((f1>f2) & (f1>f3))
+      max:=1
+      EnviarMensaje (V,r1)
+      EnviarMensaje (F,r2)
+      EnviarMensaje (F,r3)
+    sino
+      si (f2>f3)
+        max:=2
+        EnviarMensaje (F,r1)
+        EnviarMensaje (V,r2)
+        EnviarMensaje (F,r3)
+      sino
+        max:=3
+        EnviarMensaje (F,r1)
+        EnviarMensaje (F,r2)
+        EnviarMensaje (V,r3)
+    Informar ('gano el robott ', max)
+  fin
+  proceso dejarFlores
+  variables
+    Av:numero
+    Ca:numero
+  comenzar
+    Av:=PosAv
+    Ca:=PosCa
+    mientras(HayFlorEnLaBolsa)
+      BloquearEsquina (10,10)
+      Pos (10,10)
+      depositarFlor
+      Pos (Av,Ca)
+      LiberarEsquina (10,10)
+  fin
+areas
+  AR1: AreaP (1,1,6,6)
+  AR2: AreaP (7,1,12,6)
+  AR3: AreaP (13,1,18,6)
+  ARC: AreaP (20,1,20,1)
+  Esquina: AreaPC (10,10,10,10)
+robots
+  robot robotTrabajador
+  variables
+    f:numero
+    soy:numero
+    gane:boolean
+    sigo:boolean
+  comenzar
+    f:=0
+    RecibirMensaje (soy,RC)
+    repetir 4
+      hacerLado (f)
+      EnviarMensaje (soy,RC)
+      EnviarMensaje (V,RC)
+      RecibirMensaje (sigo,RC)
+    EnviarMensaje (soy,RC)
+    EnviarMensaje (f,RC)
+    RecibirMensaje (gane,RC)
+    si (gane=F)
+      dejarFlores
+  fin
+  robot robotCoordinador
+  variables
+    soy:numero
+    f1,f2,f3:numero
+    etapaR1,etapaR2,etapaR3:boolean
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    repetir 12
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (etapaR1,r1)
+      sino
+        si (soy=2)
+          RecibirMensaje (etapaR2,r2)
+        sino
+          RecibirMensaje (etapaR3,r3)
+      si ((etapaR1=V) & (etapaR2=V) & (etapaR3=V))
+        EnviarMensaje (V,r1)
+        EnviarMensaje (V,r2)
+        EnviarMensaje (V,r3)
+        etapaR1:=F
+        etapaR2:=F
+        etapaR3:=F
+    repetir 3
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (f1,r1)
+      sino
+        si (soy=2)
+          RecibirMensaje (f2,r2)
+        sino
+          RecibirMensaje (f3,r3)
+    Ganador_InformarG (f1,f2,f3)
+  fin
+variables
+  r1,r2,r3: robotTrabajador
+  RC: robotCoordinador
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(r1, Esquina)
+  AsignarArea(r2, Esquina)
+  AsignarArea(r3, Esquina)
+  AsignarArea(RC, ARC)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 7,1)
+  Iniciar(r3, 13,1)
+  Iniciar(RC, 20,1)
+fin

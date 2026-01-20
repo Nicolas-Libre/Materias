@@ -1,0 +1,109 @@
+programa ejemplo
+procesos
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso hacerPasosF1 (E calle:numero; ES f:numero; ES primero:numero)
+  variables
+    mov:numero
+  comenzar
+    repetir (calle-2)
+      juntarFlores (f)
+      mover
+    juntarFlores (f)
+    BloquearEsquina (6,calle)
+    mover
+    juntarFlores (f)
+    mover
+    LiberarEsquina (6,calle)
+    si (primero=0)
+      primero:=1
+    mov:=60-calle
+    repetir mov
+      juntarFlores (f)
+      mover
+    juntarFlores (f)  
+  fin
+  proceso hacerPasosF2 (E calle:numero; ES f:numero; ES primero:numero)
+  comenzar
+    repetir 4
+      juntarFlores (f)
+      mover
+    juntarFlores (f)
+    BloquearEsquina (6,calle)
+    mover
+    juntarFlores (f)
+    mover
+    LiberarEsquina (6,calle)
+    si (primero=0)
+      primero:=2
+    repetir 54
+      juntarFlores (f)
+      mover
+    juntarFlores (f)  
+  fin
+areas
+  Cuadrante: AreaPC (1,1,61,61)
+  ARF: AreaP (100,100,100,100)
+robots
+  robot robotRecorrer
+  variables
+    soy:numero
+    f:numero
+    primero:numero
+    calle:numero
+  comenzar
+    f:=0
+    primero:=0
+    RecibirMensaje (soy,RF)
+    RecibirMensaje (calle,RF)
+    si (soy=2)
+      derecha
+      Pos (1,calle)
+      hacerPasosF2 (calle,f,primero)
+    sino
+      hacerPasosF1 (calle,f,primero)
+    si (soy=1)
+      si (primero=1)
+        EnviarMensaje (soy,RF)
+        EnviarMensaje (f,RF)
+    sino
+      si (primero=2)
+        EnviarMensaje (soy,RF)
+        EnviarMensaje (f,RF)
+  fin
+  robot robotFis
+  variables
+    soy:numero
+    f1:numero
+    f2:numero
+    calle:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    Random (calle,2,50)
+    EnviarMensaje (calle,r1)
+    EnviarMensaje (calle,r2)
+    RecibirMensaje (soy,*)
+    si (soy=1)
+      RecibirMensaje (f1,r1)
+      Informar ('el robottUno llego primero y junto flores iguales a ', f1)
+    sino
+      RecibirMensaje (f2,r2)
+      Informar ('el robottDos llego primero y junto flores iguales a ', f2)
+  fin
+  
+variables
+  r1,r2: robotRecorrer
+  RF: robotFis
+comenzar
+  AsignarArea(r1, Cuadrante)
+  AsignarArea(r2, Cuadrante)
+  AsignarArea(RF, ARF)
+  Iniciar(r1, 6,1)
+  Iniciar (r2,1,2)
+  Iniciar (RF,100,100)
+fin

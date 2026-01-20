@@ -1,0 +1,81 @@
+programa ejemplo
+procesos
+  proceso moverFlor (E AvInicial:numero; E CaInicial:numero)
+  comenzar
+    tomarFlor
+    BloquearEsquina (11,11)
+    Pos (11,11)
+    LiberarEsquina (10,10)
+    depositarFlor
+    Pos (AvInicial, CaInicial)
+    LiberarEsquina (11,11)
+  fin
+areas
+  Inicio: AreaPC (10,10,10,10)
+  Fin: AreaPC (11,11,11,11)
+  AR1: AreaP (9,9,9,9)
+  AR2: AreaP (9,10,9,10)
+  AR3: AreaP (9,11,9,11)
+  AR4: AreaP (9,12,9,12)
+  ARJ: AreaP (1,1,1,1)
+robots
+  robot robotMueveFlor
+  variables
+    soy:numero
+    AvInicial:numero
+    CaInicial:numero
+    termine:boolean
+  comenzar
+    RecibirMensaje (soy,RJ)
+    AvInicial:=PosAv
+    CaInicial:=PosCa
+    termine:=F
+    mientras (termine=F)
+      BloquearEsquina (10,10)
+      Pos (10,10)
+      si (HayFlorEnLaEsquina)
+        moverFlor(AvInicial,CaInicial)
+      sino
+        termine:=V
+        Pos (AvInicial, CaInicial)
+        LiberarEsquina (10,10) 
+    EnviarMensaje (soy,RJ)
+  fin
+  robot robotJefe
+  variables
+    soy:numero
+    ultimo:numero
+  comenzar
+    ultimo:=0
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4,r4)
+    repetir 4
+      RecibirMensaje (soy,*)
+    ultimo:=soy
+    Informar (ultimo)
+  fin
+variables
+  r1,r2,r3,r4: robotMueveFlor
+  RJ:robotJefe
+comenzar
+  AsignarArea(r1, Inicio)
+  AsignarArea(r2, Inicio)
+  AsignarArea(r3, Inicio)
+  AsignarArea(r4, Inicio)
+  AsignarArea (r1,Fin)
+  AsignarArea (r2,Fin)
+  AsignarArea (r3,Fin)
+  AsignarArea (r4,Fin)
+  AsignarArea (r1,AR1)
+  AsignarArea (r2,AR2)
+  AsignarArea (r3,AR3)
+  AsignarArea (r4,AR4)
+  AsignarArea (RJ,ARJ)
+  Iniciar(r1, 9,9)
+  Iniciar(r2, 9,10)
+  Iniciar(r3, 9,11)
+  Iniciar(r4, 9,12)
+  Iniciar(RJ, 1,1)
+fin

@@ -1,0 +1,141 @@
+programa ejemplo
+procesos
+  proceso hacerCuadrado(E lado: numero)
+  comenzar
+    repetir 4
+      repetir lado
+        mientras (HayFlorEnLaEsquina)
+          tomarFlor
+        mover
+      derecha
+  fin
+  proceso CalcularMaximo (E cantF1:numero; E cantF2:numero; E cantF3:numero; ES max:numero)
+  comenzar
+    si (cantF1>cantF2) & (cantF1>cantF3)
+      max:=1
+    sino
+      si (cantF2 > cantF3)
+        max:=2
+      sino
+        max:=3
+  fin
+areas
+  AR1: AreaP (1,1,7,22)
+  AR2: AreaP (10,1,17,22)
+  AR3: AreaP (20,1,27,22)
+  ARC: AreaP (100,100,100,100)
+  Esquina: AreaC (50,50,50,50)
+robots
+  robot robotRecolector
+  variables
+    soy:numero
+    lado:numero
+    dejeF:boolean
+    cantFDejadas:numero
+    AvMov:numero
+    CaMov:numero
+    sigo:boolean
+  comenzar
+    cantFDejadas:=0
+    RecibirMensaje (soy,RC)
+    RecibirMensaje (lado,RC)
+    repetir 3
+      hacerCuadrado (lado)
+      AvMov:=PosAv
+      CaMov:=PosCa+lado+1
+      si (HayFlorEnLaBolsa)
+        mientras (HayFlorEnLaBolsa)
+          BloquearEsquina (50,50)
+          Pos (50,50)
+          depositarFlor
+          cantFDejadas:=cantFDejadas+1
+          Pos (AvMov,CaMov)
+          LiberarEsquina (50,50)
+      sino
+        Pos(AvMov,CaMov) 
+      EnviarMensaje (soy,RC)      
+      EnviarMensaje (cantFDejadas,RC)  
+      cantFDejadas:=0  
+  fin
+  robot robotCoordinador
+  variables
+    soy:numero
+    lado:numero
+    cantF1,cantF2,cantF3:numero
+    AvInicial:numero
+    CaInicial:numero
+    max:numero
+    f:numero
+  comenzar
+    max:=0
+    cantF1:=0
+    cantF2:=0
+    cantF3:=0
+    soy:=0
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    AvInicial:=PosAv
+    CaInicial:=PosCa
+    repetir 3
+      soy:=soy+1
+      si (soy=1)
+        Random (lado,1,6)
+        EnviarMensaje (lado,r1)
+      sino
+        si (soy=2)
+          Random (lado,1,6)
+          EnviarMensaje (lado,r2)
+        sino
+          Random (lado,1,6)
+          EnviarMensaje (lado,r3)
+    repetir 9
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (f,r1)
+        BloquearEsquina (50,50)
+        Pos (50,50)
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+        Pos (AvInicial,CaInicial)
+        LiberarEsquina (50,50)
+        cantF1:=cantF1+f
+      sino
+        si (soy=2)
+          RecibirMensaje (f,r2)
+          BloquearEsquina (50,50)
+          Pos (50,50)
+          mientras(HayFlorEnLaEsquina)
+            tomarFlor
+          Pos (AvInicial,CaInicial)
+          LiberarEsquina (50,50)
+          cantF2:=cantF2+f
+        sino
+          RecibirMensaje (f,r3)
+          BloquearEsquina (50,50)
+          Pos (50,50)
+          mientras(HayFlorEnLaEsquina)
+            tomarFlor
+          Pos (AvInicial,CaInicial)
+          LiberarEsquina (50,50)
+          cantF3:=cantF3+1     
+    CalcularMaximo (cantF1,cantF2,cantF3,max)
+    Informar ('el robott con mas flores es el robott ', max)
+  fin
+variables
+  r1,r2,r3: robotRecolector
+  RC: robotCoordinador
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RC, ARC)
+  AsignarArea(r1, Esquina)
+  AsignarArea(r2, Esquina)
+  AsignarArea(r3, Esquina)
+  AsignarArea(RC, Esquina)
+  Iniciar(r1, 1,1)
+  Iniciar (r2,10,1)
+  Iniciar (r3,20,1)
+  Iniciar (RC, 100,100)
+fin

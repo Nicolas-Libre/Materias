@@ -1,0 +1,64 @@
+programa ejemplo
+procesos
+  proceso juntarPapeles (ES papeles: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles+1
+    mientras (HayPapelEnLaBolsa)
+      depositarPapel
+  fin
+  proceso juntarFlores (ES flores: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+    mientras (HayPapelEnLaBolsa)
+      depositarFlor
+  fin
+  proceso hacer (ES escalones:numero; ES cant:numero)
+  variables
+    papeles:numero
+    flores:numero
+  comenzar
+    repetir 4
+      repetir 2
+        repetir escalones
+          juntarPapeles (papeles)
+          juntarFlores (flores)
+          mover
+        derecha
+      repetir 2 
+        derecha
+      escalones:= escalones*2
+      si (papeles - flores = 1)
+        cant:= cant+1
+      flores:=flores-flores
+      papeles:=papeles-papeles
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1  
+  variables
+    escalones: numero
+    cant:numero
+  comenzar
+    escalones:=1
+    hacer (escalones, cant)
+    Informar (cant)
+  fin
+
+variables
+  r1,r2,r3: robot1
+
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+
+  Iniciar(r1, 1, 1)
+  Iniciar(r2, 8, 8)
+  Iniciar(r3, 20, 20)
+
+fin

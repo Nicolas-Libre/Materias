@@ -1,0 +1,47 @@
+/*
+Ejemplo de declaración de variables y asignación. 
+ */
+package tema1;
+
+import PaqueteLectura.Lector;
+
+/**
+ *
+ * @author vsanz
+ */
+public class Demo01DeclaracionVariables {
+public static void main(String[] args) {
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        int DFF=8;
+        int DFC=4;
+        int edificio[][] = new int [DFF][DFC];
+        int i, j;
+        for (i=0; i < (DFF+1); i++){
+            for (j=0; (j<DFC+1); j++){
+                edificio [i][j]=0;
+            }
+        }
+        int z,t;
+        System.out.println("ingrese el piso al que accede");
+        z = Lector.leerInt();
+        while (z != 9) {
+                System.out.println ("ingrese la oficina a la que accede");
+                t = Lector.leerInt();
+                edificio[z][t] = edificio [z][t] + 1;
+                System.out.println("ingrese el piso al que accede");
+                z = Lector.leerInt();
+    }
+        
+        for (i=0; i < (DFF+1); i++){
+            System.out.println ("----------");
+        
+            for (j=0; (j<DFC+1); j++){
+                System.out.print(edificio [i][j] + " | ");
+            }
+        }   
+    }
+    
+}

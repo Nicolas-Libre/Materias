@@ -1,0 +1,132 @@
+programa ejemplo
+procesos
+  proceso juntarPapeles (ES p:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso hacerEscalon(ES p: numero; E alto: numero; E ancho:numero)
+  comenzar
+    repetir alto
+      juntarPapeles (p)
+      mover
+    derecha
+    repetir ancho
+      juntarPapeles (p)
+      mover
+    repetir 3
+      derecha
+  fin
+  proceso dejarPapeles
+  variables
+    Av:numero
+    Ca:numero
+  comenzar
+    Av:=PosAv
+    Ca:=PosCa
+    BloquearEsquina (100,100)
+    Pos (100,100)
+    mientras(HayPapelEnLaBolsa)
+      depositarPapel
+    Pos (Av,Ca)
+    LiberarEsquina (100,100)
+  fin
+  proceso CalcularMaximo (E p1:numero; E p2:numero; E p3:numero; ES max:numero)
+  comenzar
+    si ((p1>p2) & (p1>p3))
+      max:=1
+    sino
+      si (p2>p3)
+        max:=2
+      sino
+        max:=3
+  fin
+areas
+  AR1: AreaP (2,1,11,13)
+  AR2: AreaP (32,1,41,13)
+  AR3: AreaP (62,1,71,13)
+  ARF: AreaP (1,1,1,1)
+  deposito: AreaPC (100,100,100,100)
+robots
+  robot robotPapelero
+  variables
+    soy:numero
+    p:numero
+    alto:numero
+    ancho:numero
+  comenzar
+    p:=0
+    RecibirMensaje (soy,RF)
+    repetir 3
+      RecibirMensaje (alto,RF)
+      RecibirMensaje (ancho,RF)
+      hacerEscalon (p,alto,ancho)
+    juntarPapeles (p)
+    si (HayPapelEnLaBolsa)
+      dejarPapeles
+    EnviarMensaje (soy,RF)
+    EnviarMensaje (p,RF)
+  fin
+  robot robotFis
+  variables
+    soy:numero
+    p1,p2,p3,p:numero
+    alto:numero
+    ancho:numero
+    max:numero
+  comenzar
+    max:=0
+    p1:=0
+    p2:=0
+    p3:=0
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    soy:=0
+    repetir 9
+      Random (alto,1,4)
+      Random (ancho,1,3)
+      soy:=soy+1
+      si (soy=1)
+        EnviarMensaje (alto,r1)
+        EnviarMensaje (ancho,r1)
+      sino
+        si (soy=2)
+          EnviarMensaje (alto,r2)
+          EnviarMensaje (ancho,r2)
+        sino
+          EnviarMensaje (alto,r3)
+          EnviarMensaje (ancho,r3)
+          soy:=0
+    repetir 3
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (p,r1)
+        p1:=p1+p
+      sino
+        si (soy=2)
+          RecibirMensaje (p,r2)
+          p2:=p2+p
+        sino
+          RecibirMensaje (p,r3)
+          p3:=p3+p
+    CalcularMaximo (p1,p2,p3,max)
+    Informar ('el robott que junto mas papeles fue el ', max)
+  fin
+variables
+  r1,r2,r3: robotPapelero
+  RF: robotFis
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(r1, deposito)
+  AsignarArea(r2, deposito)
+  AsignarArea(r3, deposito)
+  AsignarArea(RF, ARF)
+  Iniciar(RF, 1,1)
+  Iniciar(r1, 2,1)
+  Iniciar(r2, 32,1)
+  Iniciar(r3, 62,1)
+fin

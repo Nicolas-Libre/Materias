@@ -1,0 +1,107 @@
+programa ejemplo
+procesos
+  proceso hacerCuadrado(E lado: numero; ES AvMoverse:numero; ES CaMoverse:numero)
+  comenzar
+    repetir lado
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mover
+    derecha
+    AvMoverse:=PosAv
+    CaMoverse:=PosCa+1
+    repetir 3
+      repetir lado
+        mientras (HayFlorEnLaEsquina)
+          tomarFlor
+        mover
+      derecha
+  fin
+areas
+  AR1: AreaP (1,1,6,31)
+  AR2: AreaP (8,1,13,31)
+  AR3: AreaP (15,1,20,31)
+  ARC: AreaP (51,1,51,1)
+  Esquina: AreaPC (50,50,50,50)
+robots
+  robot robotCuadrado
+  variables
+    soy:numero
+    lado:numero
+    AvVolver:numero
+    CaVolver:numero
+    AvMoverse:numero
+    CaMoverse:numero
+    terminoR1,terminoR2,terminoR3:boolean
+    etapaR1,etapaR2,etapaR3:boolean
+  comenzar
+    AvMoverse:=0
+    CaMoverse:=0
+    terminoR1:=F
+    terminoR2:=F
+    terminoR3:=F
+    etapaR1:=F
+    etapaR2:=F
+    etapaR3:=F
+    RecibirMensaje (soy,RC)
+    si (soy=1) 
+      repetir 5
+        Random(lado,1,5)
+        hacerCuadrado (lado,AvMoverse,CaMoverse)
+        etapaR1:=V
+        EnviarMensaje (etapaR1,r2)
+        EnviarMensaje (etapaR1,r3)
+        RecibirMensaje (etapaR2,r2)
+        RecibirMensaje (etapaR3,r3)
+        Pos (AvMoverse,CaMoverse)
+    sino
+      si (soy=2)
+        repetir 5
+          Random(lado,1,5)
+          hacerCuadrado (lado,AvMoverse,CaMoverse)
+          etapaR1:=V
+          EnviarMensaje (etapaR2,r1)
+          EnviarMensaje (etapaR2,r3)
+          RecibirMensaje (etapaR1,r1)
+          RecibirMensaje (etapaR3,r3)
+          Pos (AvMoverse,CaMoverse)    
+      sino
+        repetir 5
+          Random(lado,1,5)
+          hacerCuadrado (lado,AvMoverse,CaMoverse)
+          etapaR1:=V
+          EnviarMensaje (etapaR3,r1)
+          EnviarMensaje (etapaR3,r2)
+          RecibirMensaje (etapaR1,r1)
+          RecibirMensaje (etapaR2,r2)
+          Pos (AvMoverse,CaMoverse)  
+    AvVolver:=PosAv
+    CaVolver:=PosCa
+    mientras (HayFlorEnLaBolsa)
+      BloquearEsquina (50,50)
+      Pos (50,50)
+      depositarFlor
+      Pos (AvVolver,CaVolver)
+      LiberarEsquina (50,50)     
+  fin
+  robot robotCoordinador
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+  fin
+variables
+  r1,r2,r3: robotCuadrado
+  RC: robotCoordinador
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RC, ARC)
+  AsignarArea(r1, Esquina)
+  AsignarArea(r2, Esquina)
+  AsignarArea(r3, Esquina)
+  Iniciar (r1, 1,1)
+  Iniciar (r2,8,1)
+  Iniciar (r3,15,1)
+  Iniciar (RC,51,1)
+fin

@@ -1,0 +1,95 @@
+programa ejemplo
+procesos
+  proceso realizarTarea(E tipo: numero)
+  variables
+    termine:boolean
+  comenzar
+    si tipo=1
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+    sino
+      si tipo=2
+        mientras (HayPapelEnLaEsquina)
+          tomarPapel
+      sino
+        si tipo=3
+          mientras (HayFlorEnLaBolsa)
+            depositarFlor
+          mientras (HayPapelEnLaBolsa)
+            depositarPapel
+  fin
+areas
+  ciudad: AreaPC (2,2,100,100)
+  AR1: AreaP (2,1,2,1)
+  AR2: AreaP (3,1,3,1)
+  ARJ: AreaP (1,1,1,1)
+robots
+  robot robotEsclavo
+  variables
+    soy:numero
+    tarea:numero
+    CaInicial:numero
+    AvInicial:numero
+    Ca:numero
+    Av:numero
+    final:boolean
+  comenzar
+    final:=F
+    AvInicial:=PosAv
+    CaInicial:=PosCa
+    RecibirMensaje (soy,RJ)
+    mientras (final=F)
+      EnviarMensaje (soy,RJ)
+      RecibirMensaje (tarea,RJ)
+      si (tarea <>4)
+        RecibirMensaje (Ca,RJ)
+        RecibirMensaje (Av,RJ)
+        BloquearEsquina (Av,Ca)
+        Pos (Av,Ca)
+        realizarTarea (tarea)
+        Pos(AvInicial,CaInicial)
+        LiberarEsquina (Av,Ca)
+      sino
+        final:=V
+  fin
+  robot robotJefe
+  variables
+    CaAleatoria:numero
+    AvAleatoria:numero
+    tarea:numero
+    soy:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    repetir 10
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        Random (tarea,1,3)
+        EnviarMensaje (tarea,r1)
+        Random (CaAleatoria,2,100)
+        EnviarMensaje (CaAleatoria,r1)
+        Random(AvAleatoria,2,100)
+        EnviarMensaje (AvAleatoria,r1)
+      sino
+        Random (tarea,1,3)
+        EnviarMensaje (tarea,r2)
+        Random (CaAleatoria,2,100)
+        EnviarMensaje (CaAleatoria,r2)
+        Random(AvAleatoria,2,100)
+        EnviarMensaje (AvAleatoria,r2)   
+    EnviarMensaje (4,r1)
+    EnviarMensaje (4,r2)
+  fin
+variables
+  r1,r2: robotEsclavo
+  RJ: robotJefe
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(RJ, ARJ)
+  Iniciar(RJ, 1,1)
+  Iniciar (r1,2,1)
+  Iniciar (r2,3,1)
+fin

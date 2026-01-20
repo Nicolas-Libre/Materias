@@ -1,0 +1,105 @@
+programa ejemplo
+procesos
+  proceso juntarFlores (ES f:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso MoveryJuntar( ES f:numero)
+  comenzar
+    repetir 9
+      juntarFlores (f)
+      mover
+    juntarFlores (f)
+  fin
+areas 
+  AR1: AreaP (1,1,1,10)
+  AR2: AreaP (2,11,2,20)
+  AR3: AreaP (3,21,3,30)
+  AR4: AreaP (4,31,4,40)
+  AR5: AreaP (5,41,5,50)
+  AR6: AreaP (6,51,6,60)
+  AF: AreaP (2,1,2,1)
+robots
+  robot robot1
+  variables
+    f:numero
+    soy:numero
+  comenzar
+    RecibirMensaje (soy,Fis) 
+    MoveryJuntar (f)
+    EnviarMensaje (soy,Fis)
+    EnviarMensaje (f,Fis)
+  fin
+  robot fiscalizador
+  variables
+    soy:numero
+    f1:numero
+    f2:numero
+    f3:numero
+    f4:numero
+    f5:numero
+    f6:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4,r4)
+    EnviarMensaje (5,r5)
+    EnviarMensaje (6,r6)
+    repetir 6
+      RecibirMensaje (soy, *)
+      si (soy=1)
+        RecibirMensaje(f1,r1)
+      sino 
+        si(soy=2)
+          RecibirMensaje (f2,r2)
+        sino 
+          si (soy=3)
+            RecibirMensaje (f3,r3)
+          sino 
+            si (soy=4)
+              RecibirMensaje (f4,r4)
+            sino 
+              si (soy=5)
+                RecibirMensaje (f5,r5)
+              sino
+                RecibirMensaje (f6,r6)
+    si (f1>f2) & (f1>f3) & (f1>f4) & (f1>f5) & (f1>f6)
+      Informar (1)
+    sino 
+      si (f2>f3) & (f2>f4) & (f2>f5) & (f2>f6)
+        Informar (2)
+      sino 
+        si (f3>f4) & (f3>f5) & (f3>f6)
+          Informar (3)
+        sino 
+          si (f4>f5) & (f4>f6)
+            Informar (4)
+          sino 
+            si (f5>f6)
+              Informar (5)
+            sino
+              Informar (6)
+  fin
+variables
+  r1,r2,r3,r4,r5,r6: robot1
+
+  Fis: fiscalizador
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(r4, AR4)
+  AsignarArea(r5, AR5)
+  AsignarArea(r6, AR6)
+  AsignarArea (Fis,AF)
+  Iniciar (r1,1,1)
+  Iniciar (r2,2,11)
+  Iniciar (r3,3,21)
+  Iniciar (r4,4,31)
+  Iniciar (r5,5,41)
+  Iniciar (r6,6,51)
+  Iniciar (Fis,2,1)
+fin

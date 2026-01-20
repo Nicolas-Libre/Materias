@@ -1,0 +1,139 @@
+programa ejemplo
+procesos
+  proceso recorrerFlor(ES f: numero)
+  variables
+    av,ca:numero
+  comenzar
+    ca:=PosCa
+    derecha
+    repetir 4
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        f:=f+1
+      mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    av:=PosAv+1
+    BloquearEsquina (av,ca)
+    mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    mover
+    LiberarEsquina (av,ca)
+    repetir 4
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        f:=f+1
+      mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso recorrerPapel (ES p:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    repetir 7
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+    ca:=PosCa+1
+    BloquearEsquina(av,ca)
+    mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+    mover
+    LiberarEsquina (av,ca)
+    repetir 11
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1 
+  fin
+areas
+  Azul: AreaPC (2,4,12,24)
+  Verde: AreaPC (16,4,26,24)
+  ARF: AreaP (1,1,1,1)
+robots
+  robot robotFlorero
+  variables
+    soy:numero
+    f:numero
+  comenzar
+    RecibirMensaje (soy,RF)
+    recorrerFlor(f)
+    EnviarMensaje(soy,RF)
+    EnviarMensaje (f,RF)
+  fin
+  robot robotPapelero
+  variables
+    soy:numero
+    p:numero
+  comenzar
+    RecibirMensaje (soy,RF)
+    recorrerPapel(p)
+    EnviarMensaje (soy,RF)
+    EnviarMensaje (p,RF)    
+  fin
+  robot robotFis
+  variables
+    soy:numero
+    fA,fV,pA,pV:numero
+    totalA,totalV:numero
+  comenzar
+    fA:=0
+    fV:=0
+    pA:=0
+    pV:=0
+    totalA:=0
+    totalV:=0
+    EnviarMensaje (1,AF)
+    EnviarMensaje (2,AP)
+    EnviarMensaje (3,VF)
+    EnviarMensaje (4,VP)
+    repetir 4
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (fA,AF)
+      sino
+        si (soy=2)
+          RecibirMensaje (pA,AP)
+        sino
+          si (soy=3)
+            RecibirMensaje (fV,VF)
+          sino
+            RecibirMensaje (pV,VP)
+    totalA:=fA + pA
+    totalV:=fV + pV
+    si (totalA > totalV)
+      Informar ('gano el equipo azul con un total de objetos igual a ', totalA)
+    sino
+      Informar ('gano el equipo verde con un total de objetos igual a ', totalV)
+  fin
+variables
+  AF,VF: robotFlorero
+  AP,VP: robotPapelero
+  RF: robotFis
+comenzar
+  AsignarArea(AF, Azul)
+  AsignarArea(AP, Azul)
+  AsignarArea(VF, Verde)
+  AsignarArea(VP, Verde)
+  AsignarArea(RF, ARF)
+  Iniciar(RF, 1,1)
+  Iniciar (AF,2,12)
+  Iniciar (VF,16,12)
+  Iniciar (AP,7,4)
+  Iniciar (VP,21,4)
+fin

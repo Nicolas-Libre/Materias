@@ -1,0 +1,137 @@
+programa ejemplo
+procesos
+  proceso VaciarEsquina(ES cant:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      cant:=cant+1
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      cant:=cant+1
+  fin
+  proceso CalcularMaximo (E cant1:numero; E cant2:numero; E cant3:numero; E cant4:numero; ES max:numero)
+  comenzar
+    si ((cant1>cant2) & (cant1>cant3) & (cant1>cant4))
+      max:=1
+    sino
+      si ((cant2>cant3) & (cant2>cant4))
+        max:=2
+      sino
+        si (cant3>cant4)
+          max:=3
+        sino
+          max:=4
+  fin
+  proceso EnviarATodos (E max:numero)
+  comenzar
+    si (max=1)
+      EnviarMensaje (V,r1)
+      EnviarMensaje (F,r2)
+      EnviarMensaje (F,r3)
+      EnviarMensaje (F,r4)
+    sino
+      si (max=2)
+        EnviarMensaje (F,r1)
+        EnviarMensaje (V,r2)
+        EnviarMensaje (F,r3)
+        EnviarMensaje (F,r4)
+      sino
+        si (max=3)
+          EnviarMensaje (F,r1)
+          EnviarMensaje (F,r2)
+          EnviarMensaje (V,r3)
+          EnviarMensaje (F,r4)
+        sino
+          EnviarMensaje (F,r1)
+          EnviarMensaje (F,r2)
+          EnviarMensaje (F,r3)
+          EnviarMensaje (V,r4)
+  fin
+areas
+  Cuadrante: AreaPC (45,48,62,69)
+  AR1: AreaP (10,10,10,10)
+  AR2: AreaP (11,10,11,10)
+  AR3: AreaP (12,10,12,10)
+  AR4: AreaP (13,10,13,10)
+  ARJ: AreaP (1,1,1,1)
+robots
+  robot robotRecolector
+  variables
+    soy:numero
+    Av,Ca:numero
+    cant:numero
+    AvIni:numero
+    CaIni:numero
+    ok:boolean
+  comenzar
+    cant:=0
+    AvIni:=PosAv
+    CaIni:=PosCa
+    RecibirMensaje (soy,RJ)
+    repetir 5
+      Random (Av,45,62)
+      Random (Ca,48,69)
+      BloquearEsquina (Av,Ca)
+      Pos (Av,Ca)
+      si ((HayFlorEnLaEsquina) | (HayPapelEnLaEsquina))
+        VaciarEsquina (cant)
+      Pos (AvIni,CaIni)
+      LiberarEsquina (Av,Ca)
+      EnviarMensaje (soy,RJ)
+      EnviarMensaje (cant,RJ)
+    RecibirMensaje (ok,RJ)
+    si (ok=V)
+      mientras (HayFlorEnLaBolsa)
+        depositarFlor
+      mientras (HayPapelEnLaBolsa)
+        depositarPapel
+  fin
+  robot robotJefe
+  variables
+    soy:numero
+    cant1,cant2,cant3,cant4,cant:numero
+    max:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4,r4)
+    repetir 20
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (cant,r1)
+        cant1:=cant1+cant
+      sino
+        si (soy=2)
+          RecibirMensaje (cant,r2)
+          cant2:=cant2+cant
+        sino
+          si (soy=3)
+            RecibirMensaje (cant,r3)
+            cant3:=cant3+cant     
+          sino
+            RecibirMensaje (cant,r4)
+            cant4:=cant4+cant
+    CalcularMaximo (cant1,cant2,cant3,cant4,max)
+    EnviarATodos (max)
+  fin 
+    
+variables
+  r1,r2,r3,r4: robotRecolector
+  RJ: robotJefe
+comenzar
+  AsignarArea(r1, Cuadrante)
+  AsignarArea(r2, Cuadrante)
+  AsignarArea(r3, Cuadrante)
+  AsignarArea(r4, Cuadrante)
+  AsignarArea (r1,AR1)
+  AsignarArea (r2,AR2)
+  AsignarArea (r3,AR3)
+  AsignarArea (r4,AR4)
+  AsignarArea (RJ,ARJ)
+  Iniciar(RJ, 1,1)
+  Iniciar (r1,10,10)
+  Iniciar (r2,11,10)
+  Iniciar (r3,12,10)
+  Iniciar (r4,13,10)
+fin

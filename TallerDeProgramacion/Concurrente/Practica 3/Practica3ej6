@@ -1,0 +1,328 @@
+programa ejemplo
+procesos
+  proceso recorrerCuadranteFlor
+  comenzar
+    repetir 6
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mover
+    derecha
+    repetir 2
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mover
+    BloquearEsquina (5,8)
+    mover
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+    mover
+    LiberarEsquina (5,8)
+    repetir 2
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mover
+    derecha
+    repetir 2
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mover
+    BloquearEsquina (8,5)
+    mover
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+    mover
+    LiberarEsquina (8,5)
+    repetir 2
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+      mover
+    derecha
+    repetir 5
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mover
+  fin
+  proceso recorrerCuadranteFyP
+  comenzar
+    repetir 2
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+    BloquearEsquina (5,8)
+    mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+    mover
+    LiberarEsquina (5,8)
+    repetir 6
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+    derecha
+    repetir 3
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+    BloquearEsquina (9,15)
+    mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+    mover
+    LiberarEsquina (9,15)
+    repetir 5
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+    derecha
+    repetir 5
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+    BloquearEsquina (15,9)
+    mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+    mover
+    LiberarEsquina (15,9)
+    repetir 3
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+    derecha
+    repetir 6
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+    BloquearEsquina (8,5)
+    mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+    mover
+    LiberarEsquina (8,5)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+    mover  
+  fin
+  proceso recorrerCuadrantePapel
+  comenzar
+    repetir 5
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+    BloquearEsquina (9,15)
+    mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+    mover
+    LiberarEsquina (9,15)
+    derecha
+    repetir 2
+      repetir 7
+        mientras (HayPapelEnLaEsquina)
+          tomarPapel
+        mover
+      derecha
+    BloquearEsquina (15,9)
+    mover
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+    mover
+    LiberarEsquina (15,9)
+    repetir 4
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+  fin
+areas
+  ARJ: AreaP (1,1,1,1)
+  Calle20: AreaPC (1,20,100,20)
+  Calle21: AreaPC (1,21,100,21)
+  Calle22: AreaPC (1,22,100,22)
+  CuadradoGeneral: AreaPC (2,2,16,16)
+  
+robots
+  robot robot1
+  variables
+    soy:numero
+    calle:numero
+    termine:boolean
+  comenzar
+    termine:=F
+    recorrerCuadranteFlor
+    RecibirMensaje (soy,RJ)
+    EnviarMensaje (soy,RJ)
+    RecibirMensaje (calle,RJ)
+    Pos (1,calle)
+    repetir 2
+      derecha
+    mientras (termine=F)
+      si (HayFlorEnLaBolsa)
+        depositarFlor
+        mover
+      sino
+        termine:=V
+      si (PosCa=100)
+        si (HayFlorEnLaBolsa)
+          depositarFlor
+        termine:=V
+  fin
+  robot robot2
+  variables
+    soy:numero
+    calle:numero
+    termine:boolean
+  comenzar
+    termine:=F
+    recorrerCuadranteFyP
+    RecibirMensaje (soy,RJ)
+    EnviarMensaje (soy,RJ)
+    RecibirMensaje (calle,RJ)
+    Pos (1,calle)
+    repetir 2
+      derecha
+    mientras (termine=F)
+      si ~(HayPapelEnLaBolsa) & ~(HayFlorEnLaBolsa)
+        termine:=V
+      sino        
+        si (HayPapelEnLaBolsa)
+          depositarPapel
+        si (HayFlorEnLaBolsa)
+          depositarFlor
+        mover
+      si (PosCa=100)
+        si (HayPapelEnLaBolsa)
+          depositarPapel
+        si (HayFlorEnLaBolsa)
+          depositarFlor
+        termine:=V
+  fin
+  robot robot3
+  variables
+    soy:numero
+    calle:numero
+    termine:boolean
+  comenzar
+    recorrerCuadrantePapel
+    RecibirMensaje (soy,RJ)
+    EnviarMensaje (soy,RJ)
+    RecibirMensaje (calle,RJ)
+    Pos (1,calle)
+    repetir 2
+      derecha
+    mientras (termine=F)
+      si (HayPapelEnLaBolsa)
+        depositarPapel
+        mover
+      sino
+        termine:=V
+      si (PosCa=100)
+        si (HayPapelEnLaBolsa)
+          depositarPapel
+        termine:=V
+  fin  
+  robot robotJefe
+  variables  
+    soy:numero
+    primero:numero
+    segundo:numero
+    ultimo:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    RecibirMensaje (soy,*)
+    si (soy=1)
+      primero:=1
+      EnviarMensaje (20,r1)
+      RecibirMensaje (soy, *)
+      si (soy=2)
+        segundo:=2
+        EnviarMensaje (21,r2)
+        ultimo:=3
+        EnviarMensaje (22,r3)
+      sino
+        segundo:=3
+        EnviarMensaje (21,r3)
+        ultimo:=2
+        EnviarMensaje (22,r2)
+    sino
+      si (soy=2)
+        primero:=2
+        EnviarMensaje (20,r2)
+        RecibirMensaje (soy,*)
+        si (soy=1)
+          segundo:=1
+          EnviarMensaje (21,r1)
+          ultimo:=3
+          EnviarMensaje (22,r3)
+        sino
+          segundo:=3
+          EnviarMensaje (21,r3)
+          ultimo:=1
+          EnviarMensaje (22,r1)
+      sino
+        primero:=3
+        EnviarMensaje (20,r3)
+        RecibirMensaje (soy,*)
+        si (soy=2)
+          segundo:=2
+          EnviarMensaje (21,r2)
+          ultimo:=1
+          EnviarMensaje (22,r1)
+        sino
+          segundo:=1
+          EnviarMensaje (21,r1)
+          ultimo:=2
+          EnviarMensaje (22,r2) 
+  fin
+         
+
+variables
+  r1: robot1
+  r2: robot2
+  r3: robot3
+  RJ: robotJefe
+comenzar
+  AsignarArea (r1, Calle20)
+  AsignarArea (r1, Calle21)
+  AsignarArea (r1, Calle22)
+  AsignarArea (r2, Calle20)
+  AsignarArea (r2, Calle21)
+  AsignarArea (r2, Calle22)
+  AsignarArea (r3, Calle20)
+  AsignarArea (r3, Calle21)
+  AsignarArea (r3, Calle22)
+  AsignarArea (r1, CuadradoGeneral)
+  AsignarArea (r2, CuadradoGeneral)
+  AsignarArea (r3, CuadradoGeneral)
+
+  AsignarArea (RJ,ARJ)
+  Iniciar (r1, 2,2)
+  Iniciar (r2, 5,5)
+  Iniciar (r3,9,9)
+  Iniciar (RJ,1,1)
+fin

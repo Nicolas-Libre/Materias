@@ -1,0 +1,209 @@
+programa ejemplo
+procesos
+  proceso recorrerLateralDos
+  variables
+    AvInicial:numero
+    AvActual,ca:numero
+    CaActual:numero
+  comenzar
+    CaActual:=PosCa
+    AvInicial:=PosAv
+    ca:=(CaActual+1)
+    mover
+    AvActual:=PosAv
+    repetir 9
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+      si (HayFlorEnLaBolsa)
+        BloquearEsquina (AvActual,ca)
+        Pos (AvActual,ca)
+        mientras(HayFlorEnLaBolsa)
+          depositarFlor
+        Pos (AvActual,CaActual)
+        LiberarEsquina (AvActual,ca)
+      mover
+      AvActual:=PosAv
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+    si (HayFlorEnLaBolsa)
+      BloquearEsquina (AvActual,ca)
+      Pos (AvActual,ca)
+      mientras(HayFlorEnLaBolsa)
+        depositarFlor
+      Pos (AvInicial,CaActual)
+      LiberarEsquina (AvActual,ca)
+    sino
+      Pos (AvInicial,CaActual)
+  fin
+  proceso recorrerLateralUno
+  variables
+    AvInicial:numero
+    AvActual,ca:numero
+    CaActual:numero
+  comenzar
+    CaActual:=PosCa
+    AvInicial:=PosAv
+    ca:=(CaActual-1)
+    mover
+    AvActual:=PosAv
+    repetir 9
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+      si (HayFlorEnLaBolsa)
+        BloquearEsquina (AvActual,ca)
+        Pos (AvActual,ca)
+        mientras(HayFlorEnLaBolsa)
+          depositarFlor
+        Pos (AvActual,CaActual)
+        LiberarEsquina (AvActual,ca)
+      mover
+      AvActual:=PosAv
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+    si (HayFlorEnLaBolsa)
+      BloquearEsquina (AvActual,ca)
+      Pos (AvActual,ca)
+      mientras(HayFlorEnLaBolsa)
+        depositarFlor
+      Pos (AvInicial,CaActual)
+      LiberarEsquina (AvActual,ca)
+    sino
+      Pos (AvInicial,CaActual)
+  fin    
+  proceso recorrerCentral (ES f:numero)
+  variables
+    AvInicial,CaInicial:numero
+  comenzar
+    f:=0
+    AvInicial:=PosAv
+    CaInicial:=PosCa
+    mover
+    repetir 9
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+      mover
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+    BloquearEsquina (20,20)
+    mover
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+      f:=f+1
+    Pos (AvInicial,CaInicial)
+    LiberarEsquina (20,20)
+  fin
+areas
+  ARCA: AreaPC (9,20,19,20)
+  ARCV: AreaPC (21,20,31,20)
+  ARLA1: AreaP (9,21,19,21)
+  ARLA2: AreaP (9,19,19,19)
+  ARLV1: AreaP (21,21,31,21)
+  ARLV2: AreaP (21,19,31,19)
+  Esquina: AreaPC (20,20,20,20)
+  ARF: AreaP (20,18,20,18)
+robots
+  robot  robotCentral
+  variables
+    soy:numero
+    f:numero
+    ok:boolean
+  comenzar
+    si (PosAv=9)
+      derecha
+    sino
+      repetir 3
+        derecha
+    RecibirMensaje(soy,RF)
+    repetir 2
+      RecibirMensaje (ok,*)
+    recorrerCentral (f)
+    EnviarMensaje (soy,RF)
+    EnviarMensaje (f,RF)
+  fin
+  robot robotLateralUno
+  comenzar
+    si (PosAv=9)
+      derecha
+    sino
+      repetir 3
+        derecha
+    recorrerLateralUno
+    si (PosAv=9)
+      EnviarMensaje (V,rcA)
+    sino
+      EnviarMensaje (V,rcV) 
+  fin
+  robot  robotLateralDos
+  comenzar
+    si (PosAv=9)
+      derecha
+    sino
+      repetir 3
+        derecha
+    recorrerLateralDos
+    si (PosAv=9)
+      EnviarMensaje (V,rcA)
+    sino
+      EnviarMensaje (V,rcV)
+  fin
+  robot robotFis
+  variables
+    soy:numero
+    fA,fV:numero
+    primero:numero
+    ultimo:numero
+  comenzar
+    EnviarMensaje (1,rcA)
+    EnviarMensaje (2,rcV)
+    repetir 2
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (fA,rcA)
+        si (primero<>2)
+          primero:=1
+          ultimo:=2
+      sino
+        RecibirMensaje (fV,rcV)
+        si (primero <>1)
+          primero:=2
+          ultimo:=1
+    si (fA>fV)
+      Informar ('azul junto mas flores', fA)
+    sino
+      si (fV>fA)
+        Informar ('verde junto mas flores',fV)
+      sino
+        Informar ('empataron con la siguiente cantidad de flores ', fA)
+    si (primero=1)
+      Informar ('azul termino ', primero)
+    sino  
+      Informar ('azul termino ', primero)
+  fin
+  
+variables
+  rcA,rcV: robotCentral
+  latA1,latV1: robotLateralUno
+  latA2,latV2: robotLateralDos
+  RF: robotFis
+comenzar
+  AsignarArea(rcA, Esquina)
+  AsignarArea(rcV, Esquina)
+  AsignarArea(rcA, ARCA)
+  AsignarArea(rcV, ARCV)
+  AsignarArea(latA1, ARCA)
+  AsignarArea(latA2, ARCA)
+  AsignarArea(latV1, ARCV)
+  AsignarArea(latV2, ARCV)
+  AsignarArea (latA1, ARLA1)
+  AsignarArea (latA2, ARLA2)
+  AsignarArea (latV1, ARLV1)
+  AsignarArea (latV2, ARLV2)
+  AsignarArea (RF, ARF)
+  Iniciar(rcA, 9,20)
+  Iniciar(rcV, 31,20)
+  Iniciar(latA1, 9,21)
+  Iniciar(latA2, 9,19)
+  Iniciar(latV1, 31,21)
+  Iniciar(latV2, 31,19)
+  Iniciar (RF, 20,18)
+fin

@@ -1,0 +1,61 @@
+programa ejemplo
+procesos
+  proceso juntarFlores (ES f:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso MoveryJuntar( ES f:numero)
+  comenzar
+    repetir 9
+      juntarFlores (f)
+      mover
+    juntarFlores (f)
+  fin
+areas 
+  AR1: AreaP (1,1,1,10)
+  AR2: AreaP (2,11,2,20)
+  AR3: AreaP (2,1,2,1)
+robots
+  robot robot1
+  variables
+    f:numero
+    soy:numero
+  comenzar
+    RecibirMensaje (soy,r3) 
+    MoveryJuntar (f)
+    EnviarMensaje (soy,r3)
+    EnviarMensaje (f,r3)
+  fin
+  robot robot3
+  variables
+    soy:numero
+    f1:numero
+    f2:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    repetir 2
+      RecibirMensaje (soy, *)
+      si (soy=1)
+        RecibirMensaje(f1,r1)
+      sino
+        RecibirMensaje (f2,r2)
+    si (f1>f2)
+      Informar (f1-f2)
+    sino
+      Informar (f2-f1)
+  fin
+variables
+  r1: robot1
+  r2: robot1
+  r3: robot3
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea (r3,AR3)
+  Iniciar (r1,1,1)
+  Iniciar (r2,2,11)
+  Iniciar (r3,2,1)
+fin

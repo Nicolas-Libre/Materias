@@ -1,0 +1,103 @@
+programa ejemplo
+procesos
+  proceso recorrerAvenidaFlor (ES f:numero)
+  comenzar
+    repetir 99
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        f:=f+1
+      mover
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso recorrerAvenidaPapel (ES p:numero)
+  comenzar
+    repetir 99
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+      mover
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:=+1
+  fin
+areas
+  AR1: AreaP (2,1,2,100)
+  AR2: AreaP (3,1,3,100)
+  AA1: AreaP (98,1,98,100)
+  AA2: AreaP (99,1,99,100)
+  ARJ: AreaP (1,1,1,1)
+robots
+  robot robotFlor
+  variables
+    f:numero
+    soy:numero
+  comenzar
+    RecibirMensaje (soy,RJ)
+    recorrerAvenidaFlor(f)
+    EnviarMensaje(soy,RJ)
+    EnviarMensaje (f,RJ)
+  fin
+  robot robotPapel
+  variables
+    p:numero
+    soy:numero
+  comenzar
+    RecibirMensaje (soy,RJ)
+    recorrerAvenidaPapel(p)
+    EnviarMensaje(soy,RJ)
+    EnviarMensaje (p,RJ)
+  fin
+  robot robotJefe
+  variables
+    soy:numero
+    f1,f2,p1,p2:numero
+    FT,PT:numero
+  comenzar
+    EnviarMensaje (1,R1)
+    EnviarMensaje (2,R2)
+    EnviarMensaje (3,A1)
+    EnviarMensaje (4,A2)
+    repetir 4
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (f1,R1)
+        FT:= FT+f1
+      sino
+        si (soy=2)
+          RecibirMensaje (f2,R2)
+          FT:=FT+f2
+        sino
+          si (soy=3)
+            RecibirMensaje (p1,A1)
+            PT:=PT+p1
+          sino
+            RecibirMensaje (p2,A2)
+            PT:=PT+p2
+    si (FT>PT)
+      Informar ('Gano rojo con las siguiente flores ', FT)
+    sino
+      si (PT>FT)
+        Informar ('Gano azul con lss siguientes papeles ', PT)
+      sino
+        Informar ('Rojo y Azul iguales a ', PT)
+  fin
+variables
+  R1: robotFlor
+  R2: robotFlor
+  A1: robotPapel
+  A2: robotPapel
+  RJ:robotJefe
+comenzar
+  AsignarArea(R1, AR1)
+  AsignarArea(R2, AR2)
+  AsignarArea(A1, AA1)
+  AsignarArea(A2, AA2)
+  AsignarArea(RJ, ARJ)
+  Iniciar(RJ, 1,1)
+  Iniciar(R1, 2,1)
+  Iniciar(R2, 3,1)
+  Iniciar(A1, 98,1)
+  Iniciar(A2,99,1)
+fin

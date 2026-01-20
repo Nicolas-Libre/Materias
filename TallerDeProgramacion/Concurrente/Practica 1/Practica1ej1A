@@ -1,0 +1,40 @@
+programa ejemplo
+procesos
+  proceso hacer(E numAv: numero; ES flor: numero; ES cantEsSinFlor: numero)
+  comenzar
+    mientras (numAv <=5)
+      Pos (numAv, 1)
+      repetir 19
+        juntarInfo (flor, cantEsSinFlor)
+        mover
+      Informar (flor)
+      numAv:=numAv+2
+      flor:=flor-flor
+  fin
+  proceso juntarInfo (ES flor: numero; ES cantEsSinFlor:numero)
+  comenzar
+    si (HayFlorEnLaEsquina)
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        flor:= flor + 1
+    sino
+      cantEsSinFlor:=cantEsSinFlor+1
+  fin
+areas
+  ciudad: AreaC (1,1,20,20)
+robots
+  robot robot1
+  variables
+    flor:numero
+    esSinFlor:numero
+  comenzar
+    hacer(1, flor, esSinFlor)
+    Informar (esSinFlor)
+    depositarFlor
+  fin
+variables
+  R_info: robot1
+comenzar
+  AsignarArea(R_info, ciudad)
+  Iniciar(R_info, 1,1)
+fin

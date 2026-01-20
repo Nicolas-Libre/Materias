@@ -1,0 +1,109 @@
+programa ejemplo
+areas
+  AR1: AreaP (1,1,1,100)
+  AR2: AreaP (2,1,2,100)
+  AR3: AreaP (3,1,3,100)
+  ARC: AreaP (4,1,4,1)
+robots
+  robot robotRecorrer
+  variables
+    soy:numero
+    N:numero
+    p:numero
+    terminoR1,terminoR2,terminoR3:boolean
+    etapaR1,etapaR2,etapaR3:boolean
+    CORTE:boolean
+  comenzar
+    p:=0
+    terminoR1:=F
+    terminoR2:=F
+    terminoR3:=F
+    etapaR1:=F
+    etapaR2:=F
+    etapaR3:=F
+    RecibirMensaje (soy,RC)
+    mientras (PosCa<100)
+      Random (N,1,5)
+      mientras (p<>N)
+        si (HayPapelEnLaEsquina)
+          tomarPapel
+          p:=p+1
+        sino
+          si (PosCa<100)
+            mover
+          sino
+            p:=N
+      si (soy=1)
+        terminoR1:=F
+        etapaR1:=V
+        si (terminoR2=F) 
+          EnviarMensaje (terminoR1,r2)
+          EnviarMensaje (V,r2)
+          RecibirMensaje (etapaR2,r2)
+          RecibirMensaje (terminoR2,r2)
+        si (terminoR3=F)
+          EnviarMensaje (terminoR1,r3)
+          EnviarMensaje (V,r3)
+          RecibirMensaje (etapaR3,r3)
+          RecibirMensaje (terminoR3,r3)
+      sino
+        si (soy=2)
+          terminoR2:=F
+          etapaR2:=V
+          si (terminoR1=F) 
+            EnviarMensaje (terminoR2,r1)
+            EnviarMensaje (V,r1)
+            RecibirMensaje (etapaR1,r1)
+            RecibirMensaje (terminoR1,r1)
+          si (terminoR3=F)
+            EnviarMensaje (terminoR2,r3)
+            EnviarMensaje (V,r3)
+            RecibirMensaje (etapaR3,r3)
+            RecibirMensaje (terminoR3,r3)
+        sino
+          terminoR3:=F
+          etapaR3:=V
+          si (terminoR1=F) 
+            EnviarMensaje (terminoR3,r1)
+            EnviarMensaje (V,r1)
+            RecibirMensaje (etapaR1,r1)
+            RecibirMensaje (terminoR1,r1)
+          si (terminoR2=F)
+            EnviarMensaje (terminoR3,r2)
+            EnviarMensaje (V,r2)  
+            RecibirMensaje (etapaR2,r2)
+            RecibirMensaje (terminoR2,r2)
+    si (soy=1)
+      terminoR1:=V
+      EnviarMensaje (terminoR1,r2)
+      EnviarMensaje (terminoR1,r3)
+    sino
+      si (soy=2)
+        terminoR2:=V
+        EnviarMensaje (terminoR2,r1)
+        EnviarMensaje (terminoR3,r3)
+      sino
+        terminoR3:=V
+        EnviarMensaje (terminoR3,r1)
+        EnviarMensaje (terminoR3,r2)       
+  fin
+        
+  robot robotCoordinador
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+  fin
+variables
+  r1,r2,r3: robotRecorrer
+  RC: robotCoordinador
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RC, ARC)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,1)
+  Iniciar(r3, 3,1)
+  Iniciar(RC, 4,1)
+fin

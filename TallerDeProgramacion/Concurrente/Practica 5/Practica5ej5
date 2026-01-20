@@ -1,0 +1,90 @@
+programa ejemplo
+procesos
+  proceso dejarPapeles(E papeles: numero)
+  comenzar
+    BloquearEsquina (100,1)
+    Pos (100,1)
+    repetir papeles
+      depositarPapel
+    Pos (13,1)
+    LiberarEsquina (100,1)
+  fin
+areas
+  AR1: AreaP (10,1,10,1)
+  AR2: AreaP (11,1,11,1)
+  AR3: AreaP (12,1,12,1)
+  ARS: AreaP (13,1,13,1)
+  Esquina: AreaC (100,1,100,1)
+robots
+  robot robotCliente
+  variables
+    soy:numero
+    papeles:numero
+    AvInicial:numero
+    CaInicial:numero
+    p:numero
+    voy:boolean
+  comenzar
+    p:=0
+    AvInicial:=PosAv
+    CaInicial:=PosCa
+    RecibirMensaje (soy,RS)
+    repetir 4
+      Random (papeles,1,5)
+      EnviarMensaje (soy,RS)
+      EnviarMensaje (papeles,RS)
+      RecibirMensaje (voy,RS)
+      mientras (p<>papeles)
+        BloquearEsquina (100,1)
+        Pos (100,1)
+        tomarPapel
+        p:=p+1
+        Pos (AvInicial,CaInicial)
+        LiberarEsquina (100,1)
+        depositarPapel
+      p:=0
+
+  fin
+  robot robotServidor
+  variables
+    soy:numero
+    papeles:numero
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    repetir 12
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (papeles,r1)
+        dejarPapeles (papeles)
+        EnviarMensaje (V,r1)
+      sino
+        si (soy=2)
+          RecibirMensaje (papeles,r2)
+          dejarPapeles (papeles)
+          EnviarMensaje (V,r2)
+        sino
+          RecibirMensaje (papeles,r3)
+          dejarPapeles (papeles)
+          EnviarMensaje (V,r3)
+  fin    
+variables
+  r1,r2,r3: robotCliente
+  RS: robotServidor
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RS, ARS)
+  AsignarArea(r1, Esquina)
+  AsignarArea(r2, Esquina)
+  AsignarArea(r3, Esquina)
+  AsignarArea(RS, Esquina)
+  Iniciar(r1, 10,1)
+  Iniciar(r2, 11,1)
+  Iniciar(r3, 12,1)
+  Iniciar(RS, 13,1)
+fin

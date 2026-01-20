@@ -1,0 +1,121 @@
+programa Practica2ej4
+procesos
+  proceso juntarTodo (ES cant:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      cant:=cant+1
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cant:=cant+1
+  fin
+  proceso PosyJuntar (ES cant:numero)
+  variables
+    avMover:numero
+    caMover:numero
+    avInicial:numero
+    caInicial:numero
+  comenzar
+    Random (avMover,25,75)
+    Random (caMover,25,75)
+    avInicial:=PosAv
+    caInicial:=PosCa
+    Pos (avMover,caMover)
+    juntarTodo(cant)
+    Pos (avInicial,caInicial)
+  fin
+areas
+  AR1: AreaP (25,1,25,1)
+  AR2: AreaP (30,1,30,1)
+  AR3: AreaP (35,1,35,1)
+  AR4: AreaP (40,1,40,1)
+  ARF: AreaP (1,1,1,1)
+  cuadrado: AreaPC (25,25,75,75)
+robots
+  robot robotJuntador
+  variables
+    cant:numero
+    soy:numero
+    termine:boolean
+  comenzar
+    RecibirMensaje (termine, RF)
+    mientras (termine=F)
+      RecibirMensaje (cant,RF)
+      PosyJuntar (cant)
+      EnviarMensaje (cant,RF)
+      RecibirMensaje (termine,RF)
+    RecibirMensaje (gane, RF)
+    si gane=V
+      Pos(50,50)
+  fin     
+  robot robotFiscalizador
+  variables
+    tot1:numero
+    tot2:numero
+    tot3:numero
+    tot4:numero   
+    soy:numero
+    termine:boolean
+  comenzar
+    tot1:=0
+    tot2:=0
+    tot3:=0
+    tot4:=0
+    repetir 10
+      Random (soy,1,4)
+      si (soy=1)
+        EnviarMensaje (F,r1)
+        EnviarMensaje (tot1,r1)
+        RecibirMensaje (tot1,r1)
+      sino
+        si (soy=2)
+          EnviarMensaje (F, r2)
+          EnviarMensaje (tot2,r2)
+          RecibirMensaje (tot2,r2)
+        sino
+          si (soy=3)
+            EnviarMensaje (F, r3)
+            EnviarMensaje (tot3,r3)
+            RecibirMensaje (tot3,r3)
+          sino
+            EnviarMensaje (F, r4)
+            EnviarMensaje (tot4,r4)
+            RecibirMensaje (tot4,r4)
+    EnviarMensaje (V,r1)
+    EnviarMensaje (V,r2)
+    EnviarMensaje (V,r3)
+    EnviarMensaje (V,r4)
+    si tot1> tot2 & tot1>tot3 & tot1>tot4
+      EnviarMensaje (V,r1)
+      Informar ('Gano',1)
+    sino
+      si tot2>tot3 & tot2>tot4
+        EnviarMensaje (V,r2)
+        Informar ('Gano',2)
+      sino
+        si tot3>tot4
+          EnviarMensaje (V,r3)
+          Informar ('Gano',3)
+        sino
+          EnviarMensaje (V,r4)
+          Informar ('Gano',4)
+  fin
+variables
+  r1,r2,r3,r4: robotJuntador
+  RF: robotFiscalizador
+comenzar
+  AsignarArea(r1, cuadrado)
+  AsignarArea(r2, cuadrado)
+  AsignarArea(r3, cuadrado)
+  AsignarArea(r4, cuadrado)
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(r4, AR4)
+  AsignarArea(RF, ARF)
+  Iniciar(RF, 1,1)
+  Iniciar(r1, 25,1)
+  Iniciar(r2, 30,1)
+  Iniciar(r3, 35,1)
+  Iniciar(r4, 40,1)
+fin

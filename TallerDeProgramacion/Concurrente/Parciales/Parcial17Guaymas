@@ -1,0 +1,137 @@
+programa ejemplo
+procesos
+  proceso juntarPapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso dejarEnDeposito (E AvMov:numero; E CaMov:numero)
+  comenzar
+    BloquearEsquina (99,99)
+    Pos (99,99)
+    mientras (HayPapelEnLaBolsa)
+      depositarPapel
+    Pos (AvMov,CaMov)
+    LiberarEsquina (99,99)
+  fin
+  proceso hacerEscalon (ES esquinas:numero; E alto:numero; E ancho:numero)
+  variables
+    AvMov:numero
+    CaMov:numero
+  comenzar
+    repetir alto
+      si (HayPapelEnLaEsquina)
+        juntarPapeles
+        esquinas:=esquinas +1
+      mover
+    AvMov:=PosAv
+    CaMov:=PosCa
+    si (HayPapelEnLaBolsa)
+      dejarEnDeposito (AvMov,CaMov)
+    derecha
+    repetir ancho
+      si (HayPapelEnLaEsquina)
+        juntarPapeles
+        esquinas:=esquinas+1
+      mover
+    AvMov:=PosAv
+    CaMov:=PosCa
+    repetir 3
+      derecha
+    si (HayPapelEnLaBolsa)
+      dejarEnDeposito (AvMov,CaMov)  
+  fin
+areas
+  AR1: AreaP (2,1,31,13)
+  AR2: AreaP (32,1,61,13)
+  AR3: AreaP (62,1,91,13)
+  ARF: AreaP (1,1,1,1)
+  Deposito: AreaC (99,99,99,99)
+robots
+  robot robotPapelero
+  variables
+    soy:numero
+    esquinas:numero
+    alto:numero
+    ancho:numero
+    ok:boolean
+    AvFinal:numero
+    CaFinal:numero
+  comenzar
+    esquinas:=0
+    RecibirMensaje (soy,RF)
+    repetir 4
+      Random (alto,1,3)
+      Random (ancho,2,4)
+      hacerEscalon (esquinas,alto,ancho)
+      EnviarMensaje (soy,RF)
+      EnviarMensaje (V,RF)
+      RecibirMensaje (ok,RF)
+    si (HayPapelEnLaEsquina)
+      AvFinal:=PosAv
+      CaFinal:=PosCa
+      juntarPapeles
+      esquinas:=esquinas+1
+      dejarEnDeposito (AvFinal,CaFinal)
+    EnviarMensaje (soy,RF)
+    EnviarMensaje (esquinas,RF)
+  fin
+  robot robotFis
+  variables
+    soy:numero
+    esquinasTotales, esq:numero
+    etapa1,etapa2,etapa3:boolean
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    repetir 12
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (etapa1,r1)
+      sino
+        si (soy=2)
+          RecibirMensaje (etapa2,r2)
+        sino
+          RecibirMensaje (etapa3,r3)
+      si ((etapa1=V) & (etapa2=V) & (etapa3=V))
+        EnviarMensaje (V,r1)
+        EnviarMensaje (V,r2)
+        EnviarMensaje (V,r3)
+        etapa1:=F
+        etapa2:=F
+        etapa3:=F
+    repetir 3
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (esq,r1)
+        esquinasTotales:=esquinasTotales + esq
+      sino
+        si (soy=2)
+          RecibirMensaje (esq,r2)
+          esquinasTotales:=esquinasTotales + esq
+        sino
+          RecibirMensaje (esq,r3)
+          esquinasTotales:=esquinasTotales + esq
+    Pos (99,99)
+    juntarPapeles
+    Informar ('esquinas totales vaciadas igual a ', esquinasTotales)
+  fin
+      
+variables
+  r1,r2,r3: robotPapelero
+  RF: robotFis
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RF, ARF)
+  AsignarArea(r1, Deposito)
+  AsignarArea(r2, Deposito)
+  AsignarArea(r3, Deposito)
+  AsignarArea(RF, Deposito)
+  Iniciar(RF, 1,1)
+  Iniciar(r1, 2,1)
+  Iniciar(r2, 32,1)
+  Iniciar(r3, 62,1)
+fin

@@ -1,0 +1,141 @@
+programa ejemplo
+procesos
+  proceso depositarEnEsquina (E AvActual:numero; E CaActual:numero)
+  comenzar
+    BloquearEsquina (50,50)
+    Pos (50,50)
+    mientras (HayFlorEnLaBolsa)
+      depositarFlor
+    Pos (AvActual,CaActual)
+    LiberarEsquina (50,50)
+  fin
+areas
+  AR1: AreaP (1,1,100,1)
+  AR2: AreaP (1,2,100,2)
+  AR3: AreaP (1,3,100,3)
+  ARJ: AreaP (1,4,1,4)
+  Esquina: AreaC (50,50,50,50)
+robots
+  robot robotJuntador
+  variables
+    m:numero
+    AvActual:numero
+    CaActual:numero
+    sigo:boolean
+    soy:numero
+  comenzar
+    derecha
+    m:=1
+    CaActual:=PosCa
+    sigo:=F
+    RecibirMensaje (soy,RJ)
+    repetir 99
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+      AvActual:=PosAv
+      m:=m+1
+      si (m=10)
+        m:=0
+        si (HayFlorEnLaBolsa)
+          depositarEnEsquina (AvActual,CaActual)
+        EnviarMensaje (soy,RJ)
+        EnviarMensaje (F,RJ)
+        RecibirMensaje (sigo,RJ)
+    si (HayFlorEnLaBolsa)
+      depositarEnEsquina (AvActual, CaActual)
+    EnviarMensaje (soy,RJ)
+    EnviarMensaje (V,RJ)
+    RecibirMensaje(sigo,RJ)
+  fin
+  robot robotJefe
+  variables
+    soy:numero
+    terminoR1,terminoR2,terminoR3:boolean
+    f:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    mientras ((terminoR1=F) | (terminoR2=F) | (terminoR3=F))
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (terminoR1,r1)
+        RecibirMensaje (soy,*)
+        si (soy=2)
+          RecibirMensaje (terminoR2,r2)
+          RecibirMensaje (soy,r3)
+          RecibirMensaje (terminoR3,r3)
+          EnviarMensaje (V,r1)
+          EnviarMensaje (V,r2)
+          EnviarMensaje (V,r3)
+        sino
+          RecibirMensaje (terminoR3,r3)
+          RecibirMensaje (soy,r2)
+          RecibirMensaje (terminoR2,r2)
+          EnviarMensaje (V,r1)
+          EnviarMensaje (V,r2)
+          EnviarMensaje (V,r3)
+      sino
+        si (soy=2)
+          RecibirMensaje (terminoR2,r2)
+          RecibirMensaje (soy,*)
+          si (soy=1)
+            RecibirMensaje (terminoR1,r1)
+            RecibirMensaje (soy,r3)
+            RecibirMensaje (terminoR3,r3)
+            EnviarMensaje (V,r2)
+            EnviarMensaje (V,r1)
+            EnviarMensaje (V,r3)
+          sino
+            RecibirMensaje (terminoR3,r3)
+            RecibirMensaje (soy,r1)
+            RecibirMensaje (terminoR1,r1)
+            EnviarMensaje (V,r2)
+            EnviarMensaje (V,r3)
+            EnviarMensaje (V,r1)
+        sino
+          RecibirMensaje (terminoR3,r3)
+          RecibirMensaje (soy,*)
+          si (soy=1)
+            RecibirMensaje (terminoR1,r1)
+            RecibirMensaje (soy,r2)
+            RecibirMensaje (terminoR2,r2)
+            EnviarMensaje (V,r3)
+            EnviarMensaje (V,r1)
+            EnviarMensaje (V,r2)
+          sino
+            RecibirMensaje (terminoR2,r2)
+            RecibirMensaje (soy,r1)
+            RecibirMensaje (terminoR1,r1)
+            EnviarMensaje (V,r3)
+            EnviarMensaje (V,r2)
+            EnviarMensaje (V,r1)
+    BloquearEsquina (50,50)
+    Pos (50,50)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    Pos (1,4)
+    LiberarEsquina (50,50)
+    Informar (f)
+  fin
+variables
+  r1,r2,r3: robotJuntador
+  RJ: robotJefe
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RJ, ARJ)
+  AsignarArea(r1, Esquina)
+  AsignarArea(r2, Esquina)
+  AsignarArea(r3, Esquina)
+  AsignarArea (RJ,Esquina)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 1,2)
+  Iniciar(r3, 1,3)
+  Iniciar(RJ, 1,4)
+fin

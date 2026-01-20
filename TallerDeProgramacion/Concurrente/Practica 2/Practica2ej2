@@ -1,0 +1,82 @@
+programa ejemplo
+procesos
+  proceso juntarTodo (ES f:numero; ES p:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso hacerEscalon (ES cant:numero)
+  variables
+    alto:numero
+    f:numero
+    p:numero
+  comenzar
+    repetir 4
+      Random(alto,1,5)
+      juntarTodo (f,p)
+      derecha
+      mover
+      juntarTodo (f,p)
+      repetir 3
+        derecha
+      repetir alto
+        mover
+      si (f > p)
+        cant:=cant+1
+      f:=0
+      p:=0
+  fin
+areas
+  AR1: AreaP (2,1,6,21)
+  AR2: AreaP (7,1,11,21)
+  AR3: AreaP (12,1,16,21)
+  ARF: AreaP (1,1,1,1)
+robots
+  robot robot1
+  variables
+    cant:numero
+    soy:numero
+  comenzar
+    RecibirMensaje (soy, RF)
+    hacerEscalon(cant)
+    EnviarMensaje (soy, RF)
+    EnviarMensaje (cant,RF)
+  fin
+  robot robotJefe
+  variables
+    soy:numero
+    cant1:numero
+    cant2:numero
+    cant3:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    repetir 3
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (cant1,r1)
+      sino
+        si (soy=2)
+          RecibirMensaje (cant2,r2)
+        sino
+          RecibirMensaje (cant3,r3)
+    Informar (cant1 + cant2 + cant3)
+  fin
+variables
+  r1,r2,r3: robot1
+  RF:robotJefe
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RF, ARF)
+  Iniciar(RF, 1,1)
+  Iniciar (r1,2,1)
+  Iniciar (r2,7,1)
+  Iniciar (r3,12,1)
+fin

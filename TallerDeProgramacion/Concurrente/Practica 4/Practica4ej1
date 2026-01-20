@@ -1,0 +1,99 @@
+programa ejemplo
+areas
+  AR1: AreaPC (1,1,1,100)
+  AR2: AreaPC (2,1,2,100)
+  AR3: AreaPC (3,1,3,100)
+  ARS: AreaP (100,100,100,100)
+robots
+  robot robotCliente
+  variables
+    soy:numero
+    listo:boolean
+    cantFlores:numero
+  comenzar
+    RecibirMensaje (soy, RS)
+    mientras (PosCa<100) 
+      Random (cantFlores,1,4)  
+      EnviarMensaje (soy,RS) 
+      EnviarMensaje (cantFlores,RS)
+      EnviarMensaje (PosCa+1,RS)
+      RecibirMensaje (listo,RS)
+      si (listo=V)
+        mover
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+        mientras(HayFlorEnLaBolsa)
+          depositarFlor
+          mover
+    mientras (HayFlorEnLaBolsa)
+      depositarFlor 
+    cantFlores:=0
+    EnviarMensaje (cantFlroes,RS)
+  fin
+  robot robotServidor
+  variables
+    soy:numero
+    calleMov:numero
+    cantFlores:numero
+    ok1:boolean
+    ok2:boolean
+    ok3:boolean
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+    ok1:=V
+    ok2:=V
+    ok3:=V
+    EnviarMensaje (2,r2)
+    EnviarMensaje (1,r1)
+    EnviarMensaje (3,r3)
+    mientras (ok1=V) | (ok2=V) | (ok3=V)
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (cantFlores,r1)
+        si (cantFlores<>0)
+          RecibirMensaje (calleMov,r1)
+          Pos (1,calleMov)
+          repetir cantFlores
+            depositarFlor
+          Pos (100,100)
+          EnviarMensaje (V,r1)
+        sino 
+          ok1:=F
+      sino
+        si (soy=2)
+          RecibirMensaje (cantFlores,r2)
+          si (cantFlores<>0)
+            RecibirMensaje (calleMov,r2)
+            Pos (2,calleMov)
+            repetir cantFlores
+              depositarFlor
+            Pos (100,100)
+            EnviarMensaje (V,r2)
+          sino 
+            ok2:=F
+        sino
+          RecibirMensaje (cantFlores,r3)
+          si (cantFlores<>0)
+            RecibirMensaje (calleMov,r3)
+            Pos (3,calleMov)
+            repetir cantFlores
+              depositarFlor
+            Pos (100,100)
+            EnviarMensaje (V,r3)
+          sino 
+            ok3:=F
+  fin 
+variables
+  r1,r2,r3: robotCliente
+  RS: robotServidor
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RS, ARS)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,1)
+  Iniciar(r3, 3,1)
+  Iniciar(RS, 100,100)
+fin

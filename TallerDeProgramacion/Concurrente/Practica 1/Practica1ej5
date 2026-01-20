@@ -1,0 +1,97 @@
+programa ejemplo
+procesos
+  proceso juntarFlores
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso dejarFlores
+  comenzar
+    mientras (HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  proceso juntarPapeles
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso dejarPapeles
+  comenzar
+    mientras (HayPapelEnLaBolsa)
+      depositarPapel
+  fin
+  
+  proceso recorrerPapel(E cant: numero)
+  variables
+    AvActual:numero
+    CaActual:numero
+  comenzar
+    AvActual:=PosAv
+    CaActual:=PosCa
+    repetir (cant)
+      juntarPapeles
+      mover
+    Pos (AvActual, CaActual) 
+  fin
+  proceso recorrerFlor (E cant:numero)
+  comenzar
+    repetir (cant)
+      juntarFlores
+      mover
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  comenzar
+    derecha
+    recorrerFlor(15)
+    dejarFlores
+    Pos (1,75) 
+    recorrerFlor (15)
+    dejarFlores
+  fin
+  robot robot2
+  comenzar
+    repetir 4 
+      derecha
+    recorrerPapel (20)
+    dejarPapeles
+    Pos (80,80)
+    recorrerPapel (20)
+    dejarPapeles
+  fin
+  robot robot3
+  comenzar
+    derecha
+    recorrerFlor(30)
+    dejarFlores
+    Pos (70,10)
+    recorrerFlor (30)
+    dejarFlores
+  fin
+  robot robot4
+  comenzar
+    repetir 4 
+      derecha
+    recorrerPapel (10)
+    dejarPapeles
+    Pos (15,1)
+    recorrerPapel (10)
+    dejarPapeles
+  fin
+variables
+  r1: robot1
+  r2: robot2
+  r3: robot3
+  r4: robot4
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  AsignarArea(r4, ciudad)
+  Iniciar(r1, 1,80)
+  Iniciar(r2, 75,80)
+  Iniciar(r3, 70,15)
+  Iniciar(r4, 10,1)
+fin

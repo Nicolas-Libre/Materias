@@ -1,0 +1,117 @@
+programa ejemplo
+procesos
+  proceso mandarAleatorio 
+  variables
+    ancho,largo:numero
+  comenzar
+    Random (largo, 1,10)
+    Random (ancho, 1,5)
+    EnviarMensaje (largo,r1)
+    EnviarMensaje (ancho,r1)
+    Random (largo,1,10)
+    Random (ancho, 1,5)
+    EnviarMensaje (largo,r2)
+    EnviarMensaje (ancho,r2)
+    Random (largo, 1,10)
+    Random (ancho,1,5)
+    EnviarMensaje (largo,r3)
+    EnviarMensaje (ancho,r3)
+  fin
+  proceso CalcularMaximo (E f1:numero; E f2:numero; E f3:numero; ES max:numero)
+  comenzar
+    si (f1>f2) & (f1>f3)
+      max:=1
+    sino
+      si (f2>f3)
+        max:=2
+      sino
+        max:=3
+  fin
+  proceso hacerRectangulo(E ancho:numero; E largo:numero)
+  comenzar
+    repetir 2
+      repetir largo
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+        mover
+      derecha
+      repetir ancho
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+        mover
+      derecha
+  fin
+areas
+  AR1: AreaP (1,1,6,11)
+  AR2: AreaP (7,1,12,11)
+  AR3: AreaP (13,1,18,11)
+  ARC: AreaP (24,24,24,24)
+  Esquina: AreaPC (25,25,25,25)
+robots
+  robot robotRectangulo
+  variables
+    soy:numero
+    ancho,largo:numero
+    AvInicial:numero
+    CaInicial:numero
+    f:numero
+  comenzar
+    AvInicial:=PosAv
+    CaInicial:=PosCa
+    RecibirMensaje (soy,RC)
+    RecibirMensaje (largo,RC)
+    RecibirMensaje (ancho,RC)
+    hacerRectangulo (ancho,largo)
+    mientras(HayFlorEnLaBolsa)
+      BloquearEsquina (25,25)
+      Pos (25,25)
+      depositarFlor
+      f:=f+1
+      Pos (AvInicial,CaInicial)
+      LiberarEsquina (25,25)
+    EnviarMensaje (soy,RC)
+    EnviarMensaje (f,RC) 
+  fin
+  robot robotCoordinador
+  variables
+    soy:numero
+    ancho,largo:numero
+    f1,f2,f3:numero
+    max:numero
+  comenzar
+    mas:=0
+    f1:=0
+    f2:=0
+    f3:=0
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    mandarAleatorio
+    repetir 3
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (f1,r1)
+      sino
+        si (soy=2)
+          RecibirMensaje (f2,r2)
+        sino
+          RecibirMensaje (f3,r3)
+    CalcularMaximo (f1,f2,f3,max)
+    Informar ('el robott que junto mas flores fue el robott ', max)  
+  fin
+variables
+  r1,r2,r3: robotRectangulo
+  RC: robotCoordinador
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(r1, Esquina)
+  AsignarArea(r2, Esquina)
+  AsignarArea(r3, Esquina)
+  AsignarArea(RC, ARC)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 7,1)
+  Iniciar(r3, 13,1)
+  Iniciar(RC, 24,24)
+fin

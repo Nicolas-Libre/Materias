@@ -1,0 +1,120 @@
+programa ejemplo
+procesos
+  proceso dejarFlores 
+  variables
+    AvActual:numero
+    CaActual:numero
+  comenzar
+    AvActual:=PosAv
+    CaActual:=PosCa
+    BloquearEsquina (10,10)
+    Pos (10,10)
+    mientras (HayFlorEnLaBolsa)  
+      depositarFlor
+    Pos (AvActual,CaActual)
+    LiberarEsquina(10,10)  
+  fin
+  proceso agarrarFlores (ES fTotales:numero)
+  variables
+    AvActual:numero
+    CaActual:numero
+  comenzar
+    AvActual:=PosAv
+    CaActual:=PosCa
+    BloquearEsquina (10,10)
+    Pos (10,10)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      fTotales:=fTotales+1
+    Pos (AvActual,CaActual)
+    LiberarEsquina (10,10)
+  fin
+areas
+  AR1: AreaP (1,3,100,3)
+  AR2: AreaP (1,4,100,4)
+  ARC: AreaP (1,5,1,5)
+  Esquina: AreaC (10,10,10,10)
+robots
+  robot robotRecolector
+  variables
+    f:numero
+    m:numero
+  comenzar
+    derecha
+    f:=0
+    m:=1
+    mientras (PosAv<100)
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        f:=f+1
+        si (f=10)
+          dejarFlores 
+          EnviarMensaje (V,RC)
+          EnviarMensaje (1,RC)
+          f:=0
+          m:=0
+      mover
+      m:=m+1
+      si (m=5)
+        si (HayFlorEnLaBolsa)
+          dejarFlores
+          EnviarMensaje (V,RC)
+          EnviarMensaje (1,RC)
+        sino
+          EnviarMensaje (F,RC)
+          EnviarMensaje (1,RC)
+        m:=0
+        f:=0
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+      si (f=10)
+        dejarFlores 
+        EnviarMensaje (V,RC)
+        EnviarMensaje (1,RC)
+        f:=0
+        m:=0
+      sino
+        EnviarMensaje (F,RC)
+        EnviarMensaje (1,RC)
+    si (HayFlorEnLaBolsa) 
+      dejarFlores
+      EnviarMensaje (V,RC)
+    sino
+      EnviarMensaje (F,RC)
+    EnviarMensaje (100,RC)
+  fin
+  robot robotCosechador
+  variables
+    Av:numero
+    activos:numero
+    hayFlores:boolean
+    fTotales:numero
+    corte:boolean
+  comenzar
+    fTotales:=0
+    activos:=2
+    mientras (activos>0)
+      RecibirMensaje (hayFlores,*)
+      si (hayFlores=V)
+        agarrarFlores (fTotales)
+      RecibirMensaje (Av,*)
+      si (Av=100)
+        activos:=activos-1      
+    Informar (' se juntaron', fTotales)   
+  fin
+        
+variables
+  r1,r2: robotRecolector
+  RC: robotCosechador
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r1, Esquina)
+  AsignarArea(r2, Esquina)
+  AsignarArea (RC,Esquina)
+  AsignarArea(RC, ARC)
+  Iniciar(r1, 1,3)
+  Iniciar(r2, 1,4)
+  Iniciar(RC, 1,5)
+fin

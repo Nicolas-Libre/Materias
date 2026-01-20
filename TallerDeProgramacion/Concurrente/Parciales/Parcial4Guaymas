@@ -1,0 +1,139 @@
+programa ejemplo
+procesos
+  proceso VaciarEsquina (ES f:numero; ES p:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso depositarTodo  (E AvActual:numero; E CaActual:numero)
+  comenzar
+    mientras (HayFlorEnLaBolsa)
+      BloquearEsquina (21,21)
+      Pos (21,21)
+      depositarFlor
+      Pos (AvActual,CaActual)
+      LiberarEsquina (21,21)
+    mientras (HayPapelEnLaBolsa)
+      BloquearEsquina (22,22)
+      Pos (22,22)
+      depositarPapel
+      Pos (AvActual,CaActual)
+      LiberarEsquina (22,22)
+  fin
+  proceso hacerLado (E pasos:numero; ES f:numero;ES p:numero) 
+  variables
+    AvActual:numero
+    CaActual:numero 
+  comenzar
+    repetir pasos
+      VaciarEsquina (f,p)
+      mover
+    derecha
+    AvActual:=PosAv
+    CaActual:=PosCa
+    depositarTodo (AvActual,CaActual)
+  fin  
+  proceso InformarFlores (E f1:numero; E f2:numero)
+  comenzar
+    si (f1>f2)
+      Informar ('el robott que junto mas flores fue el robott1 con flores iguales a ',f1)
+    sino
+      Informar ('el robott que junto mas flores fue el robott2 con flores iguales a ', f2)
+  fin
+  proceso InformarPapeles (E p1:numero; E p2:numero)
+  comenzar
+    si (p1>p2)
+      Informar ('el robott que junto mas papeles fue el robott1 con papeles iguales a ', p1)
+    sino
+      Informar ('el robott que junto mas papeles fue el robott2 con papeles iguales a ', p2)
+  fin
+areas
+  AR1: AreaP (1,1,20,20)
+  AR2: AreaP (21,1,40,20)
+  ARC: AreaP (23,23,23,23)
+  EsquinaFlor: AreaPC (21,21,21,21)
+  EsquinaPapel: AreaPC (22,22,22,22)
+robots
+  robot robotTrabajador
+  variables
+    soy:numero
+    alto:numero
+    ancho:numero
+    f:numero
+    p:numero
+  comenzar
+    p:=0
+    f:=0
+    RecibirMensaje (soy,RC)
+    RecibirMensaje (alto,RC)
+    RecibirMensaje (ancho,RC)
+    repetir 2
+      hacerLado (alto,f,p)
+      EnviarMensaje (soy,RC)
+      EnviarMensaje (f,RC)
+      EnviarMensaje (p,RC)
+      f:=0
+      p:=0
+      hacerLado (ancho,f,p)
+      EnviarMensaje (soy,RC)
+      EnviarMensaje (f,RC)
+      EnviarMensaje (p,RC)
+      f:=0
+      p:=0
+  fin
+  robot robotCoordinador
+  variables
+    soy:numero
+    alto:numero
+    ancho:numero
+    f1,f2:numero
+    f,p:numero
+    p1,p2:numero
+  comenzar
+    soy:=0
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    repetir 2
+      Random (alto,19,19)
+      Random (ancho,19,19)
+      soy:=soy+1
+      si (soy=1)
+        EnviarMensaje (alto,r1)
+        EnviarMensaje (ancho,r1)
+      sino
+        EnviarMensaje (alto,r2)
+        EnviarMensaje (ancho,r2)
+    repetir 8
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (f,r1)
+        f1:=f1+f
+        RecibirMensaje (p,r1)
+        p1:=p1+p
+      sino
+        RecibirMensaje (f,r2)
+        f2:=f2+f
+        RecibirMensaje (p,r2)
+        p2:=p2+p
+    InformarFlores (f1,f2)
+    InformarPapeles (p1,p2)    
+  fin  
+variables
+  r1,r2: robotTrabajador
+  RC: robotCoordinador
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(RC, ARC)
+  AsignarArea (r1,EsquinaFlor)
+  AsignarArea (r2,EsquinaFlor)
+  AsignarArea (r1,EsquinaPapel)
+  AsignarArea (r2,EsquinaPapel)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 21,1)
+  Iniciar(RC, 23,23)
+fin

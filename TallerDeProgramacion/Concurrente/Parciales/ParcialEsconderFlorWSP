@@ -1,0 +1,103 @@
+programa ejemplo
+procesos
+  proceso recorrerAvenida(E numAv: numero)
+  comenzar
+    Pos(numAv, 1)
+    repetir 99
+      mover
+  fin
+areas
+  lugar: AreaC (10,10,13,13)
+  AR1: AreaP (2,2,2,2)
+  AR2: AreaP (3,3,3,3)
+  AR3: AreaP (4,4,4,4)
+  ARE: AreaP (1,1,1,1)
+robots
+  robot robotBuscador
+  variables
+    soy:numero
+    Av:numero
+    Ca:numero
+    AvIni:numero
+    CaIni:numero
+    termine:boolean
+  comenzar
+    termine:=F
+    AvIni:=PosAv
+    CaIni:=PosCa
+    RecibirMensaje (soy,RE)
+    mientras (termine=F)
+      Random (Av,10,13)
+      Random (Ca,10,13)
+      BloquearEsquina (Av,Ca)
+      Pos (Av,Ca)
+      si (HayFlorEnLaEsquina)
+        tomarFlor
+        termine:=V
+        EnviarMensaje (soy,RE)
+      Pos (AvIni,CaIni)
+      LiberarEsquina (Av,Ca)
+      si (soy=1)
+        si (termine=V)
+          EnviarMensaje (V,r2)
+          EnviarMensaje (V,r3)
+        sino
+          EnviarMensaje (F,r2)
+          EnviarMensaje (F,r3)
+          repetir 2
+            RecibirMensaje (termine,*)
+      sino
+        si (soy=2)
+          si (termine=V)
+            EnviarMensaje (V,r1)
+            EnviarMensaje (V,r3)
+          sino
+            EnviarMensaje (F,r1)
+            EnviarMensaje (F,r3)
+            repetir 2
+              RecibirMensaje (termine,*)
+        sino
+          si termine=V
+            EnviarMensaje (V,r1)
+            EnviarMensaje (V,r2)
+          sino
+            EnviarMensaje (F,r1)
+            EnviarMensaje (F,r2)
+            repetir 2
+              RecibirMensaje (termine,*)
+  fin
+  robot robotEscondedor
+  variables
+    Av:numero
+    Ca:numero
+    gano:numero
+  comenzar
+    tomarFlor
+    Random (Av,10,13)
+    Random (Ca,10,13)
+    Pos (Av,Ca)
+    depositarFlor
+    Pos (1,1)
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    RecibirMensaje (gano,*)
+    Informar ('el robott ganador es el robott ', gano)
+  fin
+variables
+  r1,r2,r3: robotBuscador
+  RE: robotEscondedor
+comenzar
+  AsignarArea(r1, lugar)
+  AsignarArea(r2, lugar)
+  AsignarArea(r3, lugar)
+  AsignarArea(RE, lugar)
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RE, ARE)
+  Iniciar(RE, 1,1)
+  Iniciar (r1,2,2)
+  Iniciar (r2,3,3)
+  Iniciar (r3,4,4)
+fin

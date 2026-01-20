@@ -1,0 +1,108 @@
+programa ejemplo
+procesos
+  proceso vaciarEsquina(E Av: numero; E Ca:numero)
+  variables
+    AvIni:numero
+    CaIni:numero
+  comenzar
+    AvIni:=PosAv
+    CaIni:=PosCa
+    BloquearEsquina (Av,Ca)
+    Pos (Av,Ca)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+    Pos (AvIni,CaIni)
+    LiberarEsquina (Av,Ca)
+  fin
+areas
+  cuadrante: AreaPC (10,10,30,30)
+  AR1: AreaP (1,1,1,1)
+  AR2: AreaP (2,1,2,1)
+  AR3: AreaP (3,1,3,1)
+  ARF: AreaP (9,9,9,9)
+robots
+  robot robotFlorero
+  variables
+    intentos:numero
+    soy:numero
+    Av,Ca:numero
+  comenzar
+    Random (intentos,2,5)
+    RecibirMensaje (soy,RF)
+    Informar (intentos)
+    repetir intentos 
+      EnviarMensaje (soy,RF)
+      EnviarMensaje (F,RF)
+      RecibirMensaje (Av,RF)
+      RecibirMensaje (Ca,RF)
+      vaciarEsquina (Av,Ca)
+      EnviarMensaje (V,RF)
+    EnviarMensaje (soy,RF)
+    EnviarMensaje (V,RF)
+    EnviarMensaje (intentos,RF)
+  fin
+  robot robotFis
+  variables
+    soy:numero
+    corte:boolean
+    terminoR1,terminoR2,terminoR3:boolean
+    intTotal,int:numero
+    Av,Ca:numero
+    ok:boolean
+  comenzar
+    corte:=F
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    mientras (corte=F)
+      Random (Av,10,30)
+      Random (Ca,10,30)
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (terminoR1,r1)
+        si (terminoR1=F)
+          EnviarMensaje (Av,r1)
+          EnviarMensaje (Ca,r1)
+          RecibirMensaje (ok,r1)
+        sino
+          RecibirMensaje (int,r1)
+          intTotal:=intTotal+int
+      sino
+        si (soy=2)
+          RecibirMensaje (terminoR2,r2)
+          si (terminoR2=F)
+            EnviarMensaje (Av,r2)
+            EnviarMensaje (Ca,r2)
+            RecibirMensaje (ok,r2)
+          sino
+            RecibirMensaje (int,r2)
+            intTotal:=intTotal+int
+        sino
+          RecibirMensaje (terminoR3,r3)
+          si (terminoR3=F)
+            EnviarMensaje (Av,r3)
+            EnviarMensaje (Ca,r3)
+            RecibirMensaje (ok,r3)
+          sino
+            RecibirMensaje (int,r3)
+            intTotal:=intTotal+int
+      si (terminoR1=V) & (terminoR2=V) & (terminoR3=V)
+        corte:=V
+    Informar ('intentos totales ', intTotal)
+  fin
+variables
+  r1,r2,r3: robotFlorero
+  RF: robotFis
+comenzar
+  AsignarArea(r1, cuadrante)
+  AsignarArea(r2, cuadrante)
+  AsignarArea(r3, cuadrante)
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RF, ARF)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,1)
+  Iniciar(r3, 3,1)
+  Iniciar(RF, 9,9)
+fin

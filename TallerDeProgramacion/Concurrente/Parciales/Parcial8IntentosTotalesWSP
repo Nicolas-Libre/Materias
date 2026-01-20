@@ -1,0 +1,115 @@
+programa ejemplo
+procesos
+  proceso juntarFlores(E Av: numero; E Ca:numero; ES f:numero)
+  variables
+    AvIni:numero
+    CaIni:numero
+  comenzar
+    AvIni:=PosAv
+    CaIni:=PosCa
+    BloquearEsquina (Av,Ca)
+    Pos (Av,Ca)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    Pos (AvIni,CaIni)
+    LiberarEsquina (Av,Ca)
+  fin
+  proceso dejarFlores 
+  variables
+    AvIni:numero
+    CaIni:numero
+  comenzar
+    AvIni:=PosAv
+    CaIni:=PosCa
+    BloquearEsquina (10,10)
+    Pos (10,10)
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+    Pos (AvIni,CaIni)
+    LiberarEsquina (10,10)
+  fin
+areas
+  cuadrante: AreaPC (40,40,60,60)
+  AR1: AreaP (1,1,1,1)
+  AR2: AreaP(2,1,2,1)
+  AR3: AreaP (3,1,3,1)
+  ARF: AreaP (4,1,4,1)
+  Esquina: AreaPC (10,10,10,10)
+robots
+  robot robotFlorero
+  variables
+    termino:boolean
+    Av:numero
+    Ca:numero
+    f:numero
+  comenzar
+    f:=0
+    mientras (termino=F)
+      RecibirMensaje (termino,RF)
+      si (termino=F)
+        RecibirMensaje (Av,RF)
+        RecibirMensaje (Ca,RF)
+        juntarFlores (Av,Ca,f)
+        EnviarMensaje (V,RF)
+    si (HayFlorEnLaBolsa)
+      dejarFlores
+    EnviarMensaje (f,RF)
+  fin
+  robot robotFis
+  variables
+    soy:numero
+    Ca:numero
+    Av:numero
+    fTotales,f:numero
+    etapaR1,etapaR2,etapaR3:numero
+  comenzar
+    fTotales:=0
+    repetir 8
+      Random (Av,40,60)
+      Random (Ca,40,60)
+      Random (soy,1,3)
+      si (soy=1)
+        EnviarMensaje (F,r1)
+        EnviarMensaje (Av,r1)
+        EnviarMensaje (Ca,r1)
+        RecibirMensaje (etapaR1,r1)
+      sino
+        si (soy=2)
+          EnviarMensaje (F,r2)
+          EnviarMensaje (Av,r2)
+          EnviarMensaje (Ca,r2)
+          RecibirMensaje (etapaR2,r2)
+        sino
+          EnviarMensaje (F,r3)
+          EnviarMensaje (Av,r3)
+          EnviarMensaje (Ca,r3)
+          RecibirMensaje (etapaR3,r3)
+    EnviarMensaje (V,r1)
+    EnviarMensaje (V,r2)
+    EnviarMensaje (V,r3)
+    repetir 3
+      RecibirMensaje (f,*)
+      fTotales:=fTotales+f
+    Informar ('los robotss juntaron flores iguales a ', fTotales)
+  fin
+    
+variables
+  r1,r2,r3: robotFlorero
+  RF: robotFis
+comenzar
+  AsignarArea(r1, cuadrante)
+  AsignarArea(r2, cuadrante)
+  AsignarArea(r3, cuadrante)
+  AsignarArea(r1, Esquina)
+  AsignarArea(r2, Esquina)
+  AsignarArea(r3, Esquina)
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RF, ARF)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,1)
+  Iniciar(r3, 3,1)
+  Iniciar(RF, 4,1)
+fin

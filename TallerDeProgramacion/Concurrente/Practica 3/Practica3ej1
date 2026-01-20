@@ -1,0 +1,87 @@
+programa ejemplo
+procesos
+  proceso juntarFlores
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso juntarPapeles
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+    
+areas
+  AFlores: AreaPC (1,1,5,10)
+  APapeles: AreaPC (6,1,10,9)
+  AR1: AreaP (6,10,6,10)
+  AR2: AreaP (7,10,7,10)
+  AR3: AreaP (8,10,8,10)
+  AR4: AreaP (9,10,9,10)
+  ARFinal: AreaPC (10,10,10,10)
+robots
+  robot robotFlores
+  variables
+    Av,Ca:numero
+    AvActual,CaActual:numero
+  comenzar
+    AvActual:=PosAv
+    CaActual:=PosCa
+    repetir 5
+      Random (Av, 1,2)
+      Random (Ca,1,2)
+      BloquearEsquina (Av,Ca)    
+      Pos(Av,Ca)
+      juntarFlores
+      Pos (AvActual,CaActual)
+      LiberarEsquina (Av,Ca)
+    mientras (HayFlorEnLaBolsa)
+      BloquearEsquina (10,10)
+      Pos (10,10)
+      depositarFlor
+      Pos (AvActual,CaActual)
+      LiberarEsquina(10,10)
+  fin
+  robot robotPapeles
+  variables
+    Av,Ca:numero
+    AvActual,CaActual:numero
+  comenzar
+    AvActual:=PosAv
+    CaActual:=PosCa
+    repetir 3
+      Random (Av, 6,10)
+      Random (Ca,1,9)
+      BloquearEsquina (Av,Ca)    
+      Pos(Av,Ca)
+      juntarPapeles
+      Pos (AvActual,CaActual)
+      LiberarEsquina (Av,Ca)
+    mientras (HayPapelEnLaBolsa)
+      BloquearEsquina (10,10)
+      Pos (10,10)
+      depositarPapel
+      Pos (AvActual,CaActual)
+      LiberarEsquina(10,10)
+  fin
+variables
+  r1,r2: robotFlores
+  r3,r4: robotPapeles
+comenzar
+  AsignarArea(r1, AFlores)
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AFlores)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, APapeles)
+  AsignarArea(r3, AR3)
+  AsignarArea(r4, APapeles)
+  AsignarArea(r4, AR4)
+  AsignarArea (r1,ARFinal)
+  AsignarArea (r2,ARFinal)
+  AsignarArea (r3,ARFinal)
+  AsignarArea (r4,ARFinal)
+  Iniciar (r1, 6,10)
+  Iniciar (r2,7,10)
+  Iniciar (r3,8,10)
+  Iniciar (r4,9,10)
+fin

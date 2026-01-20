@@ -1,0 +1,118 @@
+programa ejemplo
+procesos
+  proceso CalcularMaximo(E CaR1:numero; E CaR2:numero; E CaR3:numero; E CaR4:numero; ES Rmax:numero)
+  comenzar
+    si (CaR1 > CaR2) & (CaR1> CaR3) & (CaR1 > CaR4)
+      Rmax:=1
+    sino
+      si (CaR2 > CaR3) & (CaR2 > CaR4)
+        Rmax:=2
+      sino
+        si (CaR3 > CaR4)
+          Rmax:=3
+        sino
+          Rmax:=4
+  fin
+areas
+  EsquinaPapel: AreaPC (11,11,11,11)
+  AR1: AreaP (4,1,4,100)
+  AR2: AreaP (6,1,6,100)
+  AR3: AreaP (8,1,8,100)
+  AR4: AreaP (10,1,10,100)
+  ARJ: AreaP (1,1,1,1)
+robots
+  robot robotCorredor
+  variables
+    AvInicial:numero
+    CaActual:numero
+    soy:numero
+    noHayMas:boolean
+    termine:boolean
+  comenzar
+    termine:=F
+    RecibirMensaje (soy,RJ)
+    AvInicial:=PosAv
+    CaActual:=PosCa
+    mientras (termine=F)
+      BloquearEsquina (11,11)
+      Pos (11,11)
+      si (HayPapelEnLaEsquina)
+        tomarPapel
+        Pos (AvInicial,CaActual)
+        LiberarEsquina (11,11)
+      sino
+        termine:=V
+        Pos (AvInicial,CaActual)
+        LiberarEsquina (11,11)
+      si (HayPapelEnLaBolsa)
+        depositarPapel
+        mover
+        CaActual:=PosCa
+      si (CaActual=100)
+        BloquearEsquina (11,11)
+        Pos (11,11)
+        si (HayPapelEnLaEsquina)
+          tomarPapel
+          Pos (AvInicial,CaActual)
+          LiberarEsquina (11,11)
+        sino
+          Pos(AvInicial,CaActual)
+          LiberarEsquina (11,11)
+        si (HayPapelEnLaBolsa)
+          depositarPapel
+        termine:=V
+    EnviarMensaje (soy,RJ)
+    EnviarMensaje (CaActual,RJ)
+  fin
+  robot robotJefe
+  variables
+    soy:numero
+    CaR1:numero
+    CaR2:numero
+    CaR3:numero
+    CaR4:numero
+    Rmax:numero
+  comenzar
+    Rmax:=0
+    CaR1:=0
+    CaR2:=0
+    CaR3:=0
+    CaR4:=0
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4,r4)
+    repetir 4
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (CaR1,r1)
+      sino
+        si (soy=2)
+          RecibirMensaje (CaR2,r2)
+        sino
+          si (soy=3)
+            RecibirMensaje (CaR3,r3)
+          sino
+            RecibirMensaje (CaR4,r4)
+    CalcularMaximo (CaR1,CaR2,CaR3,CaR4,Rmax)
+    Informar(Rmax)
+  fin
+variables
+  r1,r2,r3,r4: robotCorredor
+  RJ:robotJefe
+comenzar
+  AsignarArea (r1, AR1)
+  AsignarArea (r2, AR2)
+  AsignarArea (r3, AR3)
+  AsignarArea (r4, AR4)
+  AsignarArea (r1,EsquinaPapel)
+  AsignarArea (r2,EsquinaPapel)
+  AsignarArea (r3,EsquinaPapel)
+  AsignarArea (r4,EsquinaPapel)
+  AsignarArea (RJ, ARJ)
+  Iniciar (RJ, 1,1)
+  Iniciar (r1,4,1)
+  Iniciar (r2,6,1)
+  Iniciar (r3,8,1)
+  Iniciar (r4,10,1) 
+fin

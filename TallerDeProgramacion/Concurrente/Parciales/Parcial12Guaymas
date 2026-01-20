@@ -1,0 +1,121 @@
+programa ejemplo
+procesos
+  proceso dejarFlores (E AvVolver:numero; E CaVolver:numero)
+  comenzar
+    mientras (HayFlorEnLaBolsa)
+      BloquearEsquina (20,20)
+      Pos (20,20)
+      depositarFlor
+      Pos (AvVolver,CaVolver)
+      LiberarEsquina (20,20)
+  fin
+      
+  proceso recorrerPrimero (ES f:numero)
+  comenzar
+    repetir 2
+      repetir 10
+        mientras (HayFlorEnLaEsquina)
+          tomarFlor
+          f:=f+1
+        mover
+      derecha
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso recorrerSegundo (ES f:numero)
+  comenzar
+    repetir 2
+      derecha
+    repetir 2
+      repetir 9
+        mientras (HayFlorEnLaEsquina)
+          tomarFlor
+          f:=f+1
+        mover
+      derecha
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+      
+areas
+  EquipoA: AreaPC (1,1,11,11)
+  EquipoB: AreaPC (13,1,23,11)
+  Esquina: AreaPC (20,20,20,20)
+  ARF: AreaP (30,1,30,1)
+robots
+  robot robot1
+  variables
+    f:numero
+  comenzar
+    f:=0
+    recorrerPrimero (f)
+    dejarFlores (PosAv,PosCa)
+    si (PosAv=11)
+      EnviarMensaje (f,r2A)
+      EnviarMensaje (V,r2A)
+    sino
+      EnviarMensaje (f,r2B)
+      EnviarMensaje (V,r2B)
+  fin
+  robot robot2
+  variables
+    f:numero
+    soy:numero
+    ok:boolean
+  comenzar
+    f:=0
+    RecibirMensaje (soy,RF)
+    si (PosAv=11)
+      RecibirMensaje (f,r1A)
+      RecibirMensaje (ok,r1A)
+    sino
+      RecibirMensaje (f,r1B)
+      RecibirMensaje (ok,r1B)
+    recorrerSegundo (f)
+    dejarFlores (PosAv,PosCa)
+    EnviarMensaje (soy,RF)
+    EnviarMensaje (f,RF)
+  fin
+  robot robotFis
+  variables
+    soy:numero
+    fA,fB:numero
+  comenzar
+    EnviarMensaje (1,r2A)
+    EnviarMensaje (2,r2B)
+    repetir 2
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (fA,r2A)
+      sino
+        RecibirMensaje (fB,r2B)
+    si (fA >fB)
+      Informar ('gano A con la siguiente cant de flores ', fA)
+    sino
+      si (fB> fA)
+        Informar ('gano B con la siguiente cant de flores ', fB)
+      sino
+        Informar ('ambos juntaron la siguiente cant de flores ', fA)
+  fin
+variables
+  r1A,r1B: robot1
+  r2A,r2B: robot2
+  RF: robotFis
+comenzar
+  AsignarArea(r1A, EquipoA)
+  AsignarArea(r2A, EquipoA)
+  AsignarArea(r1B, EquipoB)
+  AsignarArea(r2B, EquipoB)
+  AsignarArea(r1A, Esquina)
+  AsignarArea(r2A, Esquina)
+  AsignarArea(r1B, Esquina)
+  AsignarArea(r2B, Esquina)
+  AsignarArea (RF,ARF)
+  Iniciar(RF, 30,1)
+  Iniciar (r1A,1,1)
+  Iniciar (r2A,11,10)
+  Iniciar (r1B,13,1)
+  Iniciar (r2B,23,10)
+fin

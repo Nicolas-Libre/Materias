@@ -1,0 +1,220 @@
+programa ejemplo
+procesos
+  proceso vaciarEsquina(ES f: numero; ES p:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+areas
+  Esquina1: AreaP (20,1,20,1)
+  Esquina2: AreaP (20,2,20,2)
+  Esquina3: AreaP (20,4,20,4)
+  Esquina4: AreaP (20,5,20,5)
+  EsquinaRJ: AreaP (20,15,20,15)
+  AR1: AreaPC (1,2,9,4)
+  AR2: AreaPC (1,6,9,8)
+  AR3: AreaPC (2,1,4,9)
+  AR4: AreaPC (6,1,8,9)
+robots
+  robot robotColumna
+  variables
+    Av:numero
+    Ca:numero
+    f:numero
+    p:numero
+    soy:numero
+  comenzar
+    f:=0
+    p:=0
+    RecibirMensaje (soy,RJ)
+    Ca:=1
+    si (soy=3)
+      Av:=2
+    sino
+      Av:=6
+    Pos (Av,Ca)
+    Ca:=Ca+1
+    repetir 2
+      repetir 2
+        vaciarEsquina (f,p)
+        BloquearEsquina (Av,Ca)
+        mover
+        vaciarEsquina (f,p)
+        Ca:=Ca+1
+        BloquearEsquina (Av,Ca)
+        mover 
+        Ca:=Ca-1
+        LiberarEsquina (Av,Ca)
+        vaciarEsquina (f,p)
+        Ca:=Ca+2
+        BloquearEsquina (Av,Ca)
+        mover
+        Ca:=Ca-1
+        LiberarEsquina (Av,Ca)
+        vaciarEsquina (f,p)
+        mover
+        Ca:=Ca+1
+        LiberarEsquina (Av,Ca)
+        Ca:=PosCa
+        Ca:=Ca+1
+      Av:=Av+1
+      Pos (Av,1)
+      Ca:=PosCa
+      Ca:=Ca+1
+    repetir 2
+      vaciarEsquina (f,p)
+      BloquearEsquina (Av,Ca)
+      mover
+      vaciarEsquina (f,p)
+      Ca:=Ca+1
+      BloquearEsquina (Av,Ca)
+      mover
+      Ca:=Ca-1
+      LiberarEsquina (Av,Ca)
+      vaciarEsquina (f,p) 
+      Ca:=Ca+2
+      BloquearEsquina (Av,Ca)
+      mover
+      Ca:=Ca-1
+      LiberarEsquina (Av,Ca)
+      vaciarEsquina (f,p)
+      mover
+      Ca:=Ca+1
+      LiberarEsquina (Av,Ca)
+      Ca:=PosCa
+      Ca:=Ca+1 
+    EnviarMensaje (soy,RJ)
+    EnviarMensaje (f,RJ)
+    EnviarMensaje (p,RJ) 
+  fin
+  robot robotFila
+  variables
+    Av:numero
+    Ca:numero
+    f:numero
+    p:numero
+    soy:numero
+  comenzar
+    f:=0
+    p:=0
+    RecibirMensaje (soy,RJ)
+    Av:=1
+    si (soy=1)
+      Ca:=2
+    sino
+      Ca:=6
+    Pos (Av,Ca) 
+    derecha
+    Av:=Av+1
+    repetir 2
+      repetir 2
+        vaciarEsquina (f,p)
+        BloquearEsquina (Av,Ca)
+        mover
+        vaciarEsquina (f,p)
+        Av:=Av+1
+        BloquearEsquina (Av,Ca)
+        mover
+        Av:=Av-1
+        LiberarEsquina (Av,Ca)
+        vaciarEsquina (f,p) 
+        Av:=Av+2
+        BloquearEsquina (Av,Ca)
+        mover
+        Av:=Av-1
+        LiberarEsquina (Av,Ca)
+        vaciarEsquina (f,p)
+        mover
+        Av:=Av+1
+        LiberarEsquina (Av,Ca)
+        Av:=PosAv+1
+      Ca:=Ca+1
+      Pos (1,Ca)
+      Av:=PosAv
+      Av:=Av+1
+    repetir 2
+      vaciarEsquina (f,p)
+      BloquearEsquina (Av,Ca)
+      mover
+      vaciarEsquina (f,p)
+      Av:=Av+1
+      BloquearEsquina (Av,Ca)
+      mover 
+      Av:=Av-1
+      LiberarEsquina (Av,Ca)
+      vaciarEsquina (f,p)
+      Av:=Av+2
+      BloquearEsquina (Av,Ca)
+      mover
+      Av:=Av-1
+      LiberarEsquina (Av,Ca)
+      vaciarEsquina (f,p)
+      mover
+      Av:=Av+1
+      LiberarEsquina (Av,Ca) 
+      Av:=PosAv+1 
+    EnviarMensaje (soy,RJ)
+    EnviarMensaje (f,RJ)
+    EnviarMensaje (p,RJ)
+  fin
+  robot robotJefe
+  variables
+    soy:numero
+    fTotales,f:numero
+    pTotales,p:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4,r4)
+    repetir 4
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (f,r1)
+        fTotales:=fTotales+f
+        RecibirMensaje (p,r1)
+        pTotales:=pTotales+p
+      sino
+        si (soy=2)
+          RecibirMensaje (f,r2)
+          fTotales:=fTotales+f
+          RecibirMensaje (p,r2)
+          pTotales:=pTotales+p
+        sino
+          si (soy=3)
+            RecibirMensaje (f,r3)
+            fTotales:=fTotales+f
+            RecibirMensaje (p,r3)
+            pTotales:=pTotales+p
+          sino
+            RecibirMensaje (f,r4)
+            fTotales:=fTotales+f
+            RecibirMensaje (p,r4)
+            pTotales:=pTotales+p
+    Informar ('flores totales igual a ', fTotales)
+    Informar ('papeles totales igual a ', pTotales)
+  fin
+variables
+  r1,r2: robotFila
+  r3,r4: robotColumna
+  RJ: robotJefe
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(r4, AR4)
+  AsignarArea(RJ, EsquinaRJ)
+  AsignarArea(r1, Esquina1)
+  AsignarArea(r2, Esquina2)
+  AsignarArea(r3, Esquina3)
+  AsignarArea(r4, Esquina4)
+  Iniciar(r1, 20,1)
+  Iniciar(r2, 20,2)
+  Iniciar(r3, 20,4)
+  Iniciar(r4, 20,5)
+  Iniciar (RJ,20,15)
+fin

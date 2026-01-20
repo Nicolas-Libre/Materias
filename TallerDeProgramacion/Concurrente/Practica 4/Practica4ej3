@@ -1,0 +1,70 @@
+programa ejemplo
+procesos
+  proceso recorrerAvenida (E soy:numero)
+  variables
+    Esquinas:numero
+    segui:boolean
+  comenzar
+    repetir 99
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+      Esquinas:=Esquinas+1
+      si Esquinas=5
+        Esquinas:=0
+        EnviarMensaje (soy,r3)
+        RecibirMensaje (segui,r3)
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso recorrerAvenida3 
+  variables
+    Esquinas:numero
+    soy:numero
+  comenzar
+    repetir 99
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+      mover
+      Esquinas:=Esquinas+1
+      si Esquinas=5
+        Esquinas:=0
+        RecibirMensaje (soy,*)
+        si (soy=1)
+          RecibirMensaje (soy, r2)
+          EnviarMensaje (V,r1)
+          EnviarMensaje (V,r2)
+        sino
+          RecibirMensaje (soy,r1)
+          EnviarMensaje (V,r1)
+          EnviarMensaje (V,r2)
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  comenzar
+    recorrerAvenida (1)
+  fin
+  robot robot2
+  comenzar
+    recorrerAvenida (2)
+  fin
+  robot robot3
+  comenzar
+    recorrerAvenida3
+  fin
+variables
+  r1: robot1
+  r2: robot2
+  r3: robot3
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,1)
+  Iniciar(r3, 3,1)
+fin

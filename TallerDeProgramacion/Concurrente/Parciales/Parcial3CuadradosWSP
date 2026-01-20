@@ -1,0 +1,97 @@
+programa ejemplo
+procesos
+  proceso juntarFlores 
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso hacerCuadrado(E lado: numero; ES esquinas:numero)
+  comenzar
+    repetir 4
+      repetir lado
+        juntarFlores
+        mover
+        esquinas:=esquinas+1
+      derecha
+  fin
+  proceso dejarFlores (E Av:numero; E Ca:numero)
+  comenzar
+    mientras (HayFlorEnLaBolsa)
+      BloquearEsquina (50,50)
+      Pos (50,50)
+      depositarFlor
+      Pos (Av,Ca)
+      LiberarEsquina (50,50)
+  fin
+  proceso ActualizarMax (E soy:numero; ES soyMax:numero; E esquinas:numero; ES esquinasMax:numero)
+  comenzar
+    si (esquinas>=esquinasMax)
+      esquinasMax:=esquinas
+      soyMax:=soy
+  fin
+areas
+  AR1: AreaP (1,1,5,16)
+  AR2: AreaP (7,1,11,16)
+  AR3: AreaP (14,1,18,16)
+  ARC: AreaP (51,51,51,51)
+  deposito: AreaPC (50,50,50,50)
+robots
+  robot robotCuadrado
+  variables
+    lado:numero
+    esquinas:numero
+    Av:numero
+    Ca:numero
+    soy:numero
+  comenzar
+    esquinas:=0
+    RecibirMensaje (soy,RC)
+    Av:=PosAv
+    repetir 3
+      Random (lado,1,4)
+      hacerCuadrado (lado,esquinas)
+      Ca:=PosCa+lado+1
+      si (HayFlorEnLaBolsa)
+        dejarFlores (Av,Ca)
+      sino
+        Pos (Av,Ca)
+    EnviarMensaje (soy,RC)
+    EnviarMensaje (esquinas,RC)
+  fin
+  robot robotCoordinador
+  variables
+    esquinas,esquinasMax:numero
+    soy,soyMax:numero
+  comenzar
+    esquinasMax:=0
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    repetir 3 
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (esquinas,r1)
+      sino
+        si (soy=2)
+          RecibirMensaje (esquinas,r2)
+        sino
+          RecibirMensaje (esquinas,r3)
+      ActualizarMax (soy,soyMax,esquinas,esquinasMax)
+    Informar (soyMax)
+  fin
+variables
+  r1,r2,r3: robotCuadrado
+  RC:robotCoordinador
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(RC, ARC)
+  AsignarArea(r1, deposito)
+  AsignarArea(r2, deposito)
+  AsignarArea(r3, deposito)
+  Iniciar(r1, 1,1)
+  Iniciar(r2,7,1)
+  Iniciar(r3, 14,1)
+  Iniciar(RC, 51,51)
+fin

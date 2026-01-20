@@ -1,0 +1,140 @@
+programa ejemplo
+procesos
+  proceso recorrerIda(ES f: numero)
+  variables
+    AvVolver:numero
+    CaVolver:numero
+    ok:boolean
+  comenzar
+    ok:=V  
+    repetir 4
+      mientras(HayFlorEnLaEsquina)
+        tomarFlor
+        f:=f+1
+      mover
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    AvVolver:=PosAv
+    CaVolver:=PosCa
+    mientras (ok=V)
+      BloquearEsquina (6,6)
+      Pos (6,6)
+      si (HayFlorEnLaEsquina)
+        tomarFlor
+        f:=f+1
+      sino
+        ok:=F
+      Pos(AvVolver,CaVolver)
+      LiberarEsquina (6,6)
+   
+  fin
+  
+  proceso recorrerVuelta (ES p:numero)
+  variables
+    AvVolver:numero
+    CaVolver:numero
+    ok:boolean
+  comenzar
+    AvVolver:=PosAv
+    CaVolver:=PosCa
+    ok:=V
+    mientras (ok=V)
+      BloquearEsquina (6,6)
+      Pos (6,6)
+      si (HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+      sino
+        ok:=F
+      Pos(AvVolver,CaVolver)
+      LiberarEsquina (6,6)
+    repetir 4
+      mientras (HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+      mover
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1    
+  fin
+areas
+  Ida1: AreaP (1,7,5,7)
+  Vuelta1: AreaP (7,5,11,5)
+  Ida2: AreaP (1,5,5,5)
+  Vuelta2: AreaP (7,7,11,7)
+  Esquina: AreaPC (6,6,6,6)
+  ARF: AreaP (1,6,1,6)
+robots
+  robot robotCorredor
+  variables
+    soy:numero
+    AvVuelta:numero
+    CaVuelta:numero
+    f:numero
+    p:numero
+    primero:numero
+  comenzar
+    f:=0
+    p:=0
+    primero:=0
+    AvVuelta:=7
+    RecibirMensaje (soy,RF)
+    si (soy=1)
+      CaVuelta:=5
+    si (soy=2)
+      CaVuelta:=7
+    derecha
+    recorrerIda(f)
+    Pos (AvVuelta,CaVuelta)
+    recorrerVuelta(p)
+    EnviarMensaje (soy,RF)
+    EnviarMensaje (f,RF)
+    EnviarMensaje (p,RF)
+  fin
+  robot robotFis
+  variables
+    soy:numero
+    f1,p1:numero
+    f2,p2:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    repetir 2
+      RecibirMensaje (soy,*)
+      si (soy=1)
+        RecibirMensaje (f1,r1)
+        RecibirMensaje (p1,r1)
+      sino
+        RecibirMensaje (f2,r2)
+        RecibirMensaje (p2,r2)
+    si (f1>f2)
+      Informar ('R1 junto mas flores que R2 con una cantidad igual a ', f1)
+    sino
+      si (f2>f1)
+        Informar ('R2 junto mas flores que R1 con una cantidad igual a ', f2)
+      sino
+        Informar ('empataron con una cantidad de flores igual a ', f1)
+    si (p1>p2)
+      Informar ('R1 junto mas papeles que R2 con una cantidad igual a ', p1)
+    sino
+      si (p2>p1)
+        Informar ('R2 junto mas papeles que R1 con una cantidad igual a ', p2)
+      sino
+        Informar ('empataron con una cantidad igual de papeles a ', p1) 
+  fin
+variables
+  r1,r2: robotCorredor
+  RF: robotFis
+comenzar
+  AsignarArea(r1, Ida1)
+  AsignarArea(r1, Vuelta1)
+  AsignarArea(r2, Ida2)
+  AsignarArea(r2, Vuelta2)
+  AsignarArea(r1, Esquina)
+  AsignarArea(r2, Esquina)
+  AsignarArea(RF, ARF)
+  Iniciar(RF, 1,6)
+  Iniciar(r1, 1,7)
+  Iniciar(r2, 1,5)
+fin

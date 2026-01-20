@@ -1,0 +1,168 @@
+programa ejemplo
+procesos
+  proceso juntarFlores(ES f: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso juntarPapeles(ES p: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso hacerEscalonFlor1 (ES f:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=5
+    repetir 4
+      repetir cant
+        mover
+      juntarFlores (f)
+      derecha
+      repetir cant
+        mover
+      juntarFlores (f)
+      repetir 3 
+        derecha
+      cant:=cant-1
+  fin
+  
+  proceso hacerEscalonFlor2 (ES f:numero) 
+  variables
+    cant:numero
+  comenzar
+    cant:=2
+    mientras (cant< 6)
+      repetir cant
+        mover
+      juntarFlores(f)
+      derecha
+      repetir cant
+        mover
+      juntarFlores (f)
+      repetir 3 
+        derecha
+      cant:=cant+1
+  fin
+  
+  proceso hacerEscalonPapel (ES p:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=5
+    repetir 4
+      repetir cant
+        mover
+      juntarPapeles(p)
+      repetir 3
+        derecha
+      repetir cant 
+        mover
+      juntarPapeles(p)
+      derecha
+      cant:=cant-1
+  fin
+  proceso hacerEscalonPapel2 (ES p:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:=2
+    mientras (cant<6)
+      repetir cant
+        mover
+      juntarPapeles (p)
+      repetir 3
+        derecha
+      repetir cant
+        mover
+      juntarPapeles(p)
+      derecha
+      cant:=cant+1
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    f:numero
+    soy:numero
+    llegue:boolean
+  comenzar
+    llegue:=F
+    RecibirMensaje (soy, RJ)
+    hacerEscalonFlor1(f)
+    mover
+    derecha
+    BloquearEsquina (16,16)
+    mover
+    llegue:=V
+    EnviarMensaje (soy,RJ)
+    EnviarMensaje (llegue, RJ)
+    juntarFlores(f)
+    repetir 2 
+      derecha
+    mover
+    LiberarEsquina(16,16)
+    hacerEscalonFlor2(f)
+    Informar (f)
+  fin
+  robot robot2
+  variables
+    p:numero
+    soy:numero
+    llegue:boolean
+  comenzar
+    RecibirMensaje (soy, RJ)
+    llegue:=F
+    hacerEscalonPapel (p)
+    mover
+    repetir 3
+      derecha
+    BloquearEsquina (16,16)
+    mover
+    llegue:=V
+    EnviarMensaje (soy,RJ)
+    EnviarMensaje (llegue, RJ)
+    juntarPapeles (p)
+    repetir 2 
+      derecha
+    mover
+    LiberarEsquina(16,16)
+    hacerEscalonPapel2 (p)
+    Informar (p)
+  fin
+  robot robotJefe
+  variables
+    soy:numero
+    llego1:boolean
+    llego2:boolean
+  comenzar
+    llego1:=F
+    llego2:=F
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    RecibirMensaje (soy, *)
+    si (soy=1)
+      RecibirMensaje (llego1, r1)
+      si (llego2=F)
+        Informar ("gano", 1)  
+    sino
+      RecibirMensaje (llego2, r2)
+      si (llego1=F)
+        Informar ('gano', 2)
+  fin
+variables
+  r1: robot1
+  r2: robot2
+  RJ: robotJefe
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea (r2,ciudad)
+  AsignarArea (RJ,ciudad)
+  Iniciar(r1, 1,1)
+  Iniciar (r2,31,1)
+  Iniciar (RJ,15,1)
+fin

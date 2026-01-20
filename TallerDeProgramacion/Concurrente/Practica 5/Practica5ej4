@@ -1,0 +1,103 @@
+programa ejemplo
+procesos
+  proceso JuntarYVolver(E AvIni:numero; E CaIni:numero; E AvAleatoria:numero; E CaAleatoria:numero; ES f:numero)
+  comenzar
+    Pos(AvAleatoria, CaAleatoria)
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+    Pos (AvIni,CaIni)
+  fin
+areas
+  AR1: AreaP (1,1,1,1)
+  AR2: AreaP (2,1,2,1)
+  AR3: AreaP (3,1,3,1)
+  ARJ: AreaP (4,1,4,1)
+  Esquina: AreaC (10,10,10,10)
+  Cuadrante: AreaPC (40,40,60,60)
+robots
+  robot robotFlorero
+  variables
+    AvIni:numero
+    CaIni:numero
+    AvAleatoria:numero
+    CaAleatoria:numero
+    sigo:boolean
+    soy:numero
+    termine:boolean
+    f:numero
+  comenzar
+    AvIni:=PosAv
+    CaIni:=PosCa
+    RecibirMensaje (termine,RJ)
+    mientras (termine=F)
+      RecibirMensaje (AvAleatoria,RJ)
+      RecibirMensaje (CaAleatoria,RJ)
+      JuntarYVolver(AvIni,CaIni,AvAleatoria,CaAleatoria,f)
+      EnviarMensaje (f,RJ)
+      RecibirMensaje (termine,RJ)
+    BloquearEsquina (10,10)
+    Pos (10,10)
+    mientras (HayFlorEnLaBolsa)
+      depositarFlor
+    Pos (AvIni,CaIni)
+    LiberarEsquina (10,10)
+  fin
+  robot robotJefe
+  variables
+    AvAleatoria:numero
+    CaAleatoria:numero
+    fTotal,f1,f2,f3:numero
+    soy:numero
+  comenzar
+    f1:=0
+    f2:=0
+    f3:=0
+    fTotal:=0
+    repetir 8
+      Random (AvAleatoria, 40,60)
+      Random (CaAleatoria, 40,60)
+      Random (soy,1,3)
+      si (soy=1)
+        EnviarMensaje (F,r1)
+        EnviarMensaje (AvAleatoria,r1)
+        EnviarMensaje (CaAleatoria,r1)
+        RecibirMensaje (f1,r1)
+      sino
+        si (soy=2)
+          EnviarMensaje (F,r2)
+          EnviarMensaje (AvAleatoria,r2)
+          EnviarMensaje (CaAleatoria,r2)
+          RecibirMensaje (f2,r2)
+        sino
+          EnviarMensaje (F,r3)
+          EnviarMensaje (AvAleatoria,r3)
+          EnviarMensaje (CaAleatoria,r3)
+          RecibirMensaje (f3,r3)
+    EnviarMensaje (V,r1)
+    EnviarMensaje (V,r2)
+    EnviarMensaje (V,r3)
+    fTotal:=fTotal+ (f1+f2+f3)
+    Informar ('Los robotes juntaron flores iguales a ', fTotal)
+  fin
+  
+variables
+  r1,r2,r3: robotFlorero
+  RJ: robotJefe
+comenzar
+  AsignarArea(r1, AR1)
+  AsignarArea(r2, AR2)
+  AsignarArea(r3, AR3)
+  AsignarArea(r1, Cuadrante)
+  AsignarArea(r2, Cuadrante)
+  AsignarArea(r3, Cuadrante)
+  AsignarArea(RJ, ARJ)
+  AsignarArea (r1,Esquina)
+  AsignarArea (r2,Esquina)
+  AsignarArea (r3,Esquina)
+  AsignarArea (RJ,Esquina)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,1)
+  Iniciar(r3, 3,1)
+  Iniciar(RJ, 4,1)
+fin
