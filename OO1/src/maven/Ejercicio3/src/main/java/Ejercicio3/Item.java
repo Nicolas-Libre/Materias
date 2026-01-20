@@ -1,7 +1,6 @@
 package Ejercicio3;
 /**
  * De esta forma crearemos las clases del ejercicio
- *
  */
 public class Item {
 
